@@ -3,7 +3,7 @@ version: '3.8'
 services:
   mysql:
     image: mysql:8.0
-    container_name: tpi_db
+    container_name: ldl_tpi_db
     restart: always
     env_file:
       - .env
