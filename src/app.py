@@ -1,5 +1,5 @@
 from flask import Flask, jsonify
-from models import db, Calzado, Suela, DetalleSuela #Se importo Suela y DetalleSuela
+from models import db, Calzado, Suela, DetalleSuela #Se importaron Suela y DetalleSuela
 from controllers.calzado_controller import calzado_bp
 from controllers.suela_controller import suela_bp
 
