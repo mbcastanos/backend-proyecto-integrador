@@ -25,4 +25,4 @@ def create_suela():
         return jsonify({"msg": "Suela creada exitosamente", "id_suela": nueva_suela.id_suela}), 201
     except Exception as e:
         db.session.rollback()
-        return jsonify({"error": str(e)}), 400
+        return jsonify({"error": str(e)}), 400 
