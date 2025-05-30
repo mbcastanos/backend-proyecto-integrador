@@ -1,5 +1,5 @@
 from flask import Flask, jsonify
-from models import db, Calzado, Suela, DetalleSuela
+from models import db, Calzado, Suela, DetalleSuela #Se importo Suela y DetalleSuela
 from controllers.calzado_controller import calzado_bp
 from controllers.suela_controller import suela_bp
 
@@ -10,7 +10,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 
 app.register_blueprint(calzado_bp)
-app.register_blueprint(suela_bp)
+app.register_blueprint(suela_bp)  #Se añadio el suela_bp
 
 if __name__ == '__main__':
     with app.app_context():
