@@ -1,14 +1,16 @@
 from flask import Flask, jsonify
-from models import db, Calzado
+from models import db, Calzado, Suela, DetalleSuela
 from controllers.calzado_controller import calzado_bp
+from controllers.suela_controller import suela_bp
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:root@localhost:3306/calzado'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:@localhost:3306/calzado'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
 
 app.register_blueprint(calzado_bp)
+app.register_blueprint(suela_bp)
 
 if __name__ == '__main__':
     with app.app_context():
