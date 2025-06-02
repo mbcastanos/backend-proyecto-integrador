@@ -34,3 +34,23 @@ def create_suela():
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 400
+
+@suela_bp.route("/<int:id>", methods=["GET"])
+def get_suela_by_id(id):
+    try:
+        if id <= 0:
+            return jsonify({"Error":"ID inválido"}),400
+        
+        suela = Suela.query.get(id)
+        
+        if suela is None:
+            return jsonify({"Error":"Suela no encontrada"}),404
+            
+        return jsonify({
+            "id_suela":suela.id_suela,
+            "id_calzado":suela.id_calzado,
+            "descripcion":suela.descripcion_general
+        })
+    
+    except Exception as e:
+        return jsonify({"Error":str(e)})
