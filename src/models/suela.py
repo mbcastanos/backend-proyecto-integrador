@@ -8,3 +8,10 @@ class Suela(db.Model):
     descripcion_general = db.Column(db.Text, nullable=True)
 
     detalles = db.relationship('DetalleSuela', backref='suela', cascade="all, delete-orphan")
+
+    def to_dict(self): # Metodo para el endpoint getAllSuelas y update_suelas
+        return {
+            'id_suela': self.id_suela,
+            'id_calzado': self.id_calzado,
+            'descripcion_general': self.descripcion_general
+        }
