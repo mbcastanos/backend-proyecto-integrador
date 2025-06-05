@@ -26,3 +26,24 @@ def create_forma():
         jsonify({"mensaje": "Forma creada con éxito", "id": nueva_forma.id_forma}),
         201,
     )
+
+@forma_bp.route("/formas/<int:id_forma", methods=["PATCH"])
+def update_forma(id_forma):
+    forma = FormaGeometrica.query.get_or_404(id_forma)
+    nombre = data.get("nombre")
+
+    if not nombre:
+        return jsonify({"error": "El campo 'nombre' es obligatorio"}), 400
+
+    forma.nombre = nombre
+    db.session.commit()
+
+    return (
+        jsonify({"mensaje": "Forma modificada con éxito", "id": forma.id_forma}),
+        201,
+    )
+
+@forma_bp.route("/formas/<int:id_forma>", methods=["GET"])
+def get_forma_by_id(id_forma):
+    forma = FormaGeometrica.query.get_or_404(id_forma)
+    return jsonify({"id_forma": forma.id_forma, "nombre": forma.nombre})
