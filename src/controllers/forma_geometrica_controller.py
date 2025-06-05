@@ -27,9 +27,10 @@ def create_forma():
         201,
     )
 
-@forma_bp.route("/formas/<int:id_forma", methods=["PATCH"])
+@forma_bp.route("/formas/<int:id_forma>", methods=["PATCH"])
 def update_forma(id_forma):
     forma = FormaGeometrica.query.get_or_404(id_forma)
+    data = request.get_json()
     nombre = data.get("nombre")
 
     if not nombre:
