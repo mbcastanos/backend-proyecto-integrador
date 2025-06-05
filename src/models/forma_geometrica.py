@@ -7,3 +7,9 @@ class FormaGeometrica(db.Model):
     nombre = db.Column(db.String(50), nullable=False)
 
     detalles = db.relationship('DetalleSuela', backref='forma')
+
+    def to_dict(self): #Metodo para el endpoint update_forma
+        return {
+            'id_forma': self.id_forma,
+            'nombre': self.nombre
+        }
