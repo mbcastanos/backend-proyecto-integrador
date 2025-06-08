@@ -8,6 +8,8 @@ suela_bp = Blueprint("suela_bp", __name__, url_prefix="/suelas")
 def create_suela():
     try:
         data = request.get_json()
+        
+        #Crear suela
         nueva_suela = Suela(
             id_calzado=data["id_calzado"],
             descripcion_general=data.get("descripcion_general", ""),
@@ -15,6 +17,7 @@ def create_suela():
         db.session.add(nueva_suela)
         db.session.flush()  # Para obtener el ID generado
 
+        detalles = []
         for detalle in data.get("detalles", []):
             nuevo_detalle = DetalleSuela(
                 id_suela=nueva_suela.id_suela,
@@ -23,13 +26,25 @@ def create_suela():
                 detalle_adicional=detalle.get("detalle_adicional", ""),
             )
             db.session.add(nuevo_detalle)
+            detalles.append({
+                "id_cuadrante": nuevo_detalle.id_cuadrante,
+                "id_forma": nuevo_detalle.id_forma,
+                "detalle_adicional": nuevo_detalle.detalle_adicional
+            })
+            
         db.session.commit()
-        return (
-            jsonify(
-                {"msg": "Suela creada exitosamente", "id_suela": nueva_suela.id_suela}
-            ),
-            201,
-        )
+        
+        #Respuesta esperada al crear con éxito la suela
+        return jsonify({
+            "msg": "Suela creada exitosamente",
+            "suela": {
+                "id_suela": nueva_suela.id_suela,
+                "id_calzado": nueva_suela.id_calzado,
+                "descripcion_general": nueva_suela.descripcion_general,
+                "detalles": detalles
+            }
+        }), 201
+        
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 400
