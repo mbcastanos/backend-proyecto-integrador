@@ -27,6 +27,27 @@ def create_forma():
         201,
     )
 
+@forma_bp.route("/formas/<int:id_forma>", methods=["PATCH"])
+def update_forma(id_forma):
+    forma = FormaGeometrica.query.get_or_404(id_forma)
+    data = request.get_json()
+    nombre = data.get("nombre")
+
+    if not nombre:
+        return jsonify({"error": "El campo 'nombre' es obligatorio"}), 400
+
+    forma.nombre = nombre
+    db.session.commit()
+
+    return (
+        jsonify({"mensaje": "Forma modificada con éxito", "id": forma.id_forma}),
+        201,
+    )
+
+@forma_bp.route("/formas/<int:id_forma>", methods=["GET"])
+def get_forma_by_id(id_forma):
+    forma = FormaGeometrica.query.get_or_404(id_forma)
+    return jsonify({"id_forma": forma.id_forma, "nombre": forma.nombre})
 # Endpoint para actualizar una forma geometrica existente por su ID
 @forma_bp.route("/<int:id_forma>", methods=["PUT"])
 def update_forma(id_forma):
