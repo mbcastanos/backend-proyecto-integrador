@@ -17,14 +17,54 @@ cursor = conn.cursor()
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS Calzado (
     id_calzado INT AUTO_INCREMENT PRIMARY KEY,
-    categoria VARCHAR(50),
-    marca VARCHAR(100),
-    modelo VARCHAR(100),
     talle VARCHAR(10),
     ancho DECIMAL(5,2),
     alto DECIMAL(5,2),
-    colores VARCHAR(100),
     tipo_registro ENUM('indubitada_proveedor', 'indubitada_comisaria', 'dubitada')
+)
+""")
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS Modelo (
+    id_modelo INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100),
+    id_calzado INT,
+    FOREIGN KEY (id_calzado) REFERENCES Calzado(id_calzado)
+)
+""")
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS colores (
+    id_color INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50),
+    id_calzado INT,
+    FOREIGN KEY (id_calzado) REFERENCES Calzado(id_calzado)
+)
+""")
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS Categoria (
+    id_categoria INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50),
+    id_calzado INT,
+    FOREIGN KEY (id_calzado) REFERENCES Calzado(id_calzado)
+)
+""")
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS Marca (
+    id_marca INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50),
+    id_calzado INT,
+    FOREIGN KEY (id_calzado) REFERENCES Calzado(id_calzado)
+)
+""")
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS User (
+    id_user INT AUTO_INCREMENT PRIMARY KEY,
+    user VARCHAR(50),
+    contraseña VARCHAR(50)
 )
 """)
 

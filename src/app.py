@@ -5,7 +5,7 @@ from controllers.suela_controller import suela_bp
 from controllers.forma_geometrica_controller import forma_bp
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:admin@localhost:3306/huellasdb'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:1234@localhost:3306/calzado'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
@@ -13,6 +13,7 @@ db.init_app(app)
 app.register_blueprint(calzado_bp)
 app.register_blueprint(suela_bp)
 app.register_blueprint(forma_bp)
+
 
 if __name__ == '__main__':
     with app.app_context():
