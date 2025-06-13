@@ -6,7 +6,7 @@ from controllers.forma_geometrica_controller import forma_bp
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = (
-    "mysql+mysqlconnector://root:admin@localhost:3306/huellasdb"
+    "mysql+mysqlconnector://root:tuclave@localhost:3306/calzado"
 )
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
