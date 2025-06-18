@@ -101,3 +101,22 @@ def update_suela(id_suela):
         # En caso de error, deshacer la transaccion y devolver un error 500
         db.session.rollback()
         return jsonify({"message": "Error al actualizar la suela", "error": str(e)}), 500
+    
+@suela_bp.route("/<int:id_suela>", methods=["DELETE"])
+def delete_suela(id_suela):
+    try:
+        suela = Suela.query.get(id_suela)
+        
+        # Si no se encuentra la suela, devuelve un error 404
+        if suela is None:
+            return jsonify({"message": "Suela no encontrada"}), 404
+        
+        db.session.delete(suela)
+        db.session.commit()
+        
+        return jsonify({"message": "Suela eliminada exitosamente"}), 200
+    
+    except Exception as e:
+        # En caso de error, deshacer la transaccion y devolver un error 500
+        db.session.rollback()
+        return jsonify({"message": "Error al eliminar la suela", "error": str(e)}), 500
