@@ -57,6 +57,87 @@ def create_calzado():
     return jsonify({'message': 'Calzado creado exitosamente'}), 201
 
 
+
+    
+@calzado_bp.route('/getAllDubitadas', methods=['GET'])
+def get_all_dubitadas():
+    calzados = Calzado.query.filter(Calzado.tipo_registro == 'DUBITADA').all()
+    resultado = []
+    for c in calzados:
+        resultado.append({
+            'id_calzado': c.id_calzado,
+            'categoria': c.categoria,
+            'marca': c.marca,
+            'modelo': c.modelo,
+            'talle': c.talle,
+            'ancho': float(c.ancho),
+            'alto': float(c.alto),
+            'colores': c.colores,
+            'tipo_registro': c.tipo_registro
+        })
+           
+    return jsonify(resultado)
+
+
+@calzado_bp.route('/getDubitadaById/<int:id_calzado>', methods=['GET'])
+def get_dubitada_by_id(id_calzado):
+    calzado = Calzado.query.get_or_404(id_calzado)
+    if calzado.tipo_registro != 'dubitada':
+        return jsonify({"error": "Este calzado no es dubitado"}), 400
+
+    return jsonify({
+        'id_calzado': calzado.id_calzado,
+        'categoria': calzado.categoria,
+        'marca': calzado.marca,
+        'modelo': calzado.modelo,
+        'talle': calzado.talle,
+        'ancho': float(calzado.ancho),
+        'alto': float(calzado.alto),
+        'colores': calzado.colores,
+        'tipo_registro': calzado.tipo_registro
+    }), 200
+
+
+@calzado_bp.route('/getAllIndubitadas', methods=['GET'])
+def get_all_indubitadas():
+    calzados = Calzado.query.filter(Calzado.tipo_registro == 'indubitada_comisaria').all()
+    resultado = []
+    for c in calzados:
+        resultado.append({
+            'id_calzado': c.id_calzado,
+            'categoria': c.categoria,
+            'marca': c.marca,
+            'modelo': c.modelo,
+            'talle': c.talle,
+            'ancho': float(c.ancho),
+            'alto': float(c.alto),
+            'colores': c.colores,
+            'tipo_registro': c.tipo_registro
+        })
+    return jsonify(resultado)
+
+
+@calzado_bp.route('/getIndubitadaById/<int:id_calzado>', methods=['GET'])
+def get_indubitada_by_id(id_calzado):
+    calzado = Calzado.query.get_or_404(id_calzado)
+    if calzado.tipo_registro not in ['indubitada_proveedor', 'indubitada_comisaria']:
+        return jsonify({"error": "Este calzado no es indubitado"}), 400
+
+    return jsonify({
+        'id_calzado': calzado.id_calzado,
+        'categoria': calzado.categoria,
+        'marca': calzado.marca,
+        'modelo': calzado.modelo,
+        'talle': calzado.talle,
+        'ancho': float(calzado.ancho),
+        'alto': float(calzado.alto),
+        'colores': calzado.colores,
+        'tipo_registro': calzado.tipo_registro
+    }), 200
+
+
+
+
 @calzado_bp.route('/<int:id_calzado>', methods=['PATCH'])
 def update_calzado(id_calzado):
     calzado = Calzado.query.get_or_404(id_calzado)

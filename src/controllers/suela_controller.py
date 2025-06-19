@@ -8,6 +8,8 @@ suela_bp = Blueprint("suela_bp", __name__, url_prefix="/suelas")
 def create_suela():
     try:
         data = request.get_json()
+        
+        #Crear suela
         nueva_suela = Suela(
             id_calzado=data["id_calzado"],
             descripcion_general=data.get("descripcion_general", ""),
@@ -15,6 +17,7 @@ def create_suela():
         db.session.add(nueva_suela)
         db.session.flush()  # Para obtener el ID generado
 
+        detalles = []
         for detalle in data.get("detalles", []):
             nuevo_detalle = DetalleSuela(
                 id_suela=nueva_suela.id_suela,
@@ -23,13 +26,25 @@ def create_suela():
                 detalle_adicional=detalle.get("detalle_adicional", ""),
             )
             db.session.add(nuevo_detalle)
+            detalles.append({
+                "id_cuadrante": nuevo_detalle.id_cuadrante,
+                "id_forma": nuevo_detalle.id_forma,
+                "detalle_adicional": nuevo_detalle.detalle_adicional
+            })
+            
         db.session.commit()
-        return (
-            jsonify(
-                {"msg": "Suela creada exitosamente", "id_suela": nueva_suela.id_suela}
-            ),
-            201,
-        )
+        
+        #Respuesta esperada al crear con éxito la suela
+        return jsonify({
+            "msg": "Suela creada exitosamente",
+            "suela": {
+                "id_suela": nueva_suela.id_suela,
+                "id_calzado": nueva_suela.id_calzado,
+                "descripcion_general": nueva_suela.descripcion_general,
+                "detalles": detalles
+            }
+        }), 201
+        
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 400
@@ -102,6 +117,7 @@ def update_suela(id_suela):
         db.session.rollback()
         return jsonify({"message": "Error al actualizar la suela", "error": str(e)}), 500
     
+
 @suela_bp.route("/<int:id_suela>", methods=["DELETE"])
 def delete_suela(id_suela):
     try:
@@ -120,3 +136,59 @@ def delete_suela(id_suela):
         # En caso de error, deshacer la transaccion y devolver un error 500
         db.session.rollback()
         return jsonify({"message": "Error al eliminar la suela", "error": str(e)}), 500
+
+@suela_bp.route("/<int:id_suela>/partial", methods=["PATCH"])
+def partial_update_suela(id_suela):
+    try:
+        suela = Suela.query.get(id_suela)
+        if suela is None:
+            return jsonify({"message": "Suela no encontrada"}), 404
+
+        data = request.get_json()
+        if not data:
+            return jsonify({"message": "No se recibieron datos JSON para la actualización"}), 400
+
+        # Actualiza campos de Suela
+        if "id_calzado" in data:
+            from models.calzado import Calzado
+            if Calzado.query.get(data["id_calzado"]) is None:
+                return jsonify({"message": "id_calzado no válido. El calzado no existe."}), 400
+            suela.id_calzado = data["id_calzado"]
+
+        if "descripcion_general" in data:
+            suela.descripcion_general = data["descripcion_general"]
+
+        # Actualiza detalles si se proporcionan
+        detalles = []
+        if "detalles" in data:
+            # Elimina los detalles existentes
+            DetalleSuela.query.filter_by(id_suela=id_suela).delete()
+            for detalle in data.get("detalles", []):
+                nuevo_detalle = DetalleSuela(
+                    id_suela=id_suela,
+                    id_cuadrante=detalle["id_cuadrante"],
+                    id_forma=detalle["id_forma"],
+                    detalle_adicional=detalle.get("detalle_adicional", "")
+                )
+                db.session.add(nuevo_detalle)
+                detalles.append({
+                    "id_cuadrante": nuevo_detalle.id_cuadrante,
+                    "id_forma": nuevo_detalle.id_forma,
+                    "detalle_adicional": nuevo_detalle.detalle_adicional
+                })
+
+        db.session.commit()
+
+        return jsonify({
+            "message": "Suela actualizada parcialmente con éxito",
+            "suela": {
+                "id_suela": suela.id_suela,
+                "id_calzado": suela.id_calzado,
+                "descripcion_general": suela.descripcion_general,
+                "detalles": detalles if "detalles" in data else [d.to_dict() for d in suela.detalles]
+            }
+        }), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"message": "Error al actualizar la suela", "error": str(e)}), 500
