@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from models import db, FormaGeometrica
+from models import db, FormaGeometrica, DetalleSuela
 
 forma_bp = Blueprint("forma_bp", __name__, url_prefix="/formas")
 
@@ -119,9 +119,35 @@ def update_forma(id_forma):
     except Exception as e:
         # En caso de error, deshacer la transaccion y devolver un error 500
         db.session.rollback()
-        return (
-            jsonify(
-                {"message": "Error al actualizar la forma geometrica", "error": str(e)}
-            ),
-            500,
-        )
+
+        return jsonify({"message": "Error al actualizar la forma geometrica", "error": str(e)}), 500
+    
+# Endpoint para eliminar una forma geometrica existente por su id
+@forma_bp.route("/<int:id_forma>", methods=["DELETE"])
+def delete_forma(id_forma):
+    try:
+        # Busca la forma geometrica por su ID
+        forma = FormaGeometrica.query.get(id_forma)
+        
+        # Si no se encuentra la forma, devuelve un error 404
+        if forma is None:
+            return jsonify({"message": "Forma geometrica no encontrada"}), 404
+        
+        # Eliminar los registros en DetalleSuela que dependen de la forma geométrica
+           
+        # Eliminar la forma geométrica
+        db.session.delete(forma)
+        db.session.commit()
+        
+        # Devuelve un mensaje de eliminación exitosa con un estado 200 OK
+        return jsonify({
+            "message": f"Forma geométrica {forma.nombre} eliminada exitosamente",
+            "id": forma.id_forma
+        }), 200
+    
+    except Exception as e:
+        # En caso de error, deshacer la transaccion y devolver un error 500
+        db.session.rollback()
+        return jsonify({"message": "Error al eliminar la forma geometrica", "error": str(e)}), 500
+
+    
