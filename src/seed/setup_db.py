@@ -61,11 +61,12 @@ CREATE TABLE IF NOT EXISTS Marca (
 """)
 
 cursor.execute("""
-CREATE TABLE IF NOT EXISTS User (
-    id_user INT AUTO_INCREMENT PRIMARY KEY,
-    user VARCHAR(50),
-    contraseña VARCHAR(50)
-)
+CREATE TABLE IF NOT EXISTS usuarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password_hash VARCHAR(128) NOT NULL,
+    role VARCHAR(20) NOT NULL
+);
 """)
 
 cursor.execute("""
