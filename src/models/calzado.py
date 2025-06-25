@@ -4,7 +4,6 @@ class Calzado(db.Model):
     __tablename__ = 'Calzado'
 
     id_calzado = db.Column(db.Integer, primary_key=True)
-    categoria = db.Column(db.String(50), nullable=False)
     marca = db.Column(db.String(100), nullable=False)
     modelo = db.Column(db.String(100), nullable=False)
     talle = db.Column(db.String(10), nullable=False)
@@ -17,3 +16,4 @@ class Calzado(db.Model):
     )
 
     suelas = db.relationship('Suela', backref='calzado', cascade="all, delete-orphan")
+    categorias = db.relationship('Categoria', backref='calzado', cascade="all, delete-orphan")
