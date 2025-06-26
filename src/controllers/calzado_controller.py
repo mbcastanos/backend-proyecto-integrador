@@ -188,3 +188,18 @@ def update_calzado(id_calzado):
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': str(e)}), 400
+    
+@calzado_bp.route('/<int:id_calzado>', methods=['DELETE'])
+def delete_calzado(id_calzado):
+    try:
+        calzado = Calzado.query.get(id_calzado)
+        if not calzado:
+            return jsonify({'error': f'Calzado con id {id_calzado} no encontrado'}), 404
+        
+        db.session.delete(calzado)
+        db.session.commit()
+        return jsonify({'message': f'Calzado con id {id_calzado} eliminado correctamente'}), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 400
