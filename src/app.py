@@ -11,7 +11,7 @@ from controllers.color_controller import color_bp
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = (
-    "mysql+mysqlconnector://root:tuclave@localhost:3306/calzado"
+    "mysql+mysqlconnector://root:admin@localhost:3306/huellas_db"
 )
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 

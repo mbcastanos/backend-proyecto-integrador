@@ -10,7 +10,6 @@ print(f"Host: mysql")
 
 try:
     conn = mysql.connector.connect(
-        host="mysql",
         user="root",
         password=os.getenv("MYSQL_ROOT_PASSWORD"),
         port=3306  
