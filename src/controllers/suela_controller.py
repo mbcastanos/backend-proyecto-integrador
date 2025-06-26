@@ -9,7 +9,6 @@ def create_suela():
     try:
         data = request.get_json()
         
-        #Crear suela
         nueva_suela = Suela(
             id_calzado=data["id_calzado"],
             descripcion_general=data.get("descripcion_general", ""),
@@ -34,7 +33,6 @@ def create_suela():
             
         db.session.commit()
         
-        #Respuesta esperada al crear con éxito la suela
         return jsonify({
             "msg": "Suela creada exitosamente",
             "suela": {
@@ -74,29 +72,24 @@ def get_all_suelas():
     try:
         suelas = Suela.query.all() 
         suelas_list = [suela.to_dict() for suela in suelas]
-        return jsonify(suelas_list), 200 # Codigo de estado 200 OK
+        return jsonify(suelas_list), 200 
     except Exception as e:
-        # Manejo de errores para cualquier problema al consultar la base de datos
         return jsonify({"message": "Error al obtener todas las suelas", "error": str(e)}), 500
 
-#Por simplicidad, este PUT solo actualizara los campos directos de la suela.
 @suela_bp.route("/<int:id_suela>", methods=["PUT"])
 def update_suela(id_suela):
     try:
         suela = Suela.query.get(id_suela)
         
-        # Si no se encuentra la suela, devuelve un error 404
         if suela is None:
             return jsonify({"message": "Suela no encontrada"}), 404
         
         data = request.get_json()
 
-        # Si no se reciben datos JSON, devuelve un error 400
         if not data:
             return jsonify({"message": "No se recibieron datos JSON para la actualizacion"}), 400
 
         if "id_calzado" in data:
-            # Verifica que el id_calzado exista en la tabla Calzado
             from models.calzado import Calzado
             if Calzado.query.get(data["id_calzado"]) is None:
                 return jsonify({"message": "id_calzado no valido. El calzado no existe."}), 400
@@ -113,7 +106,6 @@ def update_suela(id_suela):
         }), 200
 
     except Exception as e:
-        # En caso de error, deshacer la transaccion y devolver un error 500
         db.session.rollback()
         return jsonify({"message": "Error al actualizar la suela", "error": str(e)}), 500
     
@@ -123,7 +115,6 @@ def delete_suela(id_suela):
     try:
         suela = Suela.query.get(id_suela)
         
-        # Si no se encuentra la suela, devuelve un error 404
         if suela is None:
             return jsonify({"message": "Suela no encontrada"}), 404
         
@@ -133,7 +124,6 @@ def delete_suela(id_suela):
         return jsonify({"message": "Suela eliminada exitosamente"}), 200
     
     except Exception as e:
-        # En caso de error, deshacer la transaccion y devolver un error 500
         db.session.rollback()
         return jsonify({"message": "Error al eliminar la suela", "error": str(e)}), 500
 
@@ -148,7 +138,6 @@ def partial_update_suela(id_suela):
         if not data:
             return jsonify({"message": "No se recibieron datos JSON para la actualización"}), 400
 
-        # Actualiza campos de Suela
         if "id_calzado" in data:
             from models.calzado import Calzado
             if Calzado.query.get(data["id_calzado"]) is None:
@@ -158,10 +147,8 @@ def partial_update_suela(id_suela):
         if "descripcion_general" in data:
             suela.descripcion_general = data["descripcion_general"]
 
-        # Actualiza detalles si se proporcionan
         detalles = []
         if "detalles" in data:
-            # Elimina los detalles existentes
             DetalleSuela.query.filter_by(id_suela=id_suela).delete()
             for detalle in data.get("detalles", []):
                 nuevo_detalle = DetalleSuela(
