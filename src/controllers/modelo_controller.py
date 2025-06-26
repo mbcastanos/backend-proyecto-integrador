@@ -6,18 +6,100 @@ modelo_bp = Blueprint('modelo_bp', __name__, url_prefix='/modelos')
 
 @modelo_bp.route('/', methods=['GET'])
 def get_all_modelos():
+    """
+    Obtener todos los modelos registrados.
+    Este endpoint devuelve una lista de todos los modelos disponibles.
+    ---
+    tags:
+      - Modelos
+    responses:
+      200:
+        description: Lista de modelos.
+        schema:
+          type: array
+          items:
+            $ref: '#/definitions/Modelo'
+      500:
+        description: Error interno del servidor.
+        schema:
+          $ref: '#/definitions/ErrorResponse'
+    """
     modelos = Modelo.query.all()
     return jsonify([modelo.to_dict() for modelo in modelos])
 
 
 @modelo_bp.route('/<int:id_modelo>', methods=['GET'])
 def get_modelo(id_modelo):
+    """
+    Obtener un modelo por su ID.
+    Este endpoint devuelve los detalles de un modelo específico utilizando su ID.
+    ---
+    tags:
+      - Modelos
+    parameters:
+      - in: path
+        name: id_modelo
+        type: integer
+        required: true
+        description: ID único del modelo a obtener.
+    responses:
+      200:
+        description: Detalles del modelo.
+        schema:
+          $ref: '#/definitions/Modelo'
+      404:
+        description: Modelo no encontrado.
+        schema:
+          $ref: '#/definitions/ErrorResponse'
+      500:
+        description: Error interno del servidor.
+        schema:
+          $ref: '#/definitions/ErrorResponse'
+    """
     modelo = Modelo.query.get_or_404(id_modelo)
     return jsonify(modelo.to_dict())
 
 
 @modelo_bp.route('/', methods=['POST'])
 def create_modelo():
+    """
+    Crear un nuevo modelo.
+    Este endpoint permite crear un nuevo modelo con un nombre único.
+    ---
+    tags:
+      - Modelos
+    parameters:
+      - in: body
+        name: modelo
+        description: Objeto de modelo a crear.
+        required: true
+        schema:
+          type: object
+          properties:
+            nombre:
+              type: string
+              description: Nombre del nuevo modelo.
+          required:
+            - nombre
+    responses:
+      201:
+        description: Modelo creado exitosamente.
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+            modelo:
+              $ref: '#/definitions/Modelo'
+      400:
+        description: Error de validación (nombre requerido o duplicado).
+        schema:
+          $ref: '#/definitions/ErrorResponse'
+      500:
+        description: Error interno del servidor.
+        schema:
+          $ref: '#/definitions/ErrorResponse'
+    """
     try:
         data = request.get_json()
         
@@ -45,6 +127,53 @@ def create_modelo():
 
 @modelo_bp.route('/<int:id_modelo>', methods=['PATCH'])
 def update_modelo(id_modelo):
+    """
+    Actualizar el nombre de un modelo existente.
+    Este endpoint permite modificar el nombre de un modelo específico. El nuevo nombre debe ser único.
+    ---
+    tags:
+      - Modelos
+    parameters:
+      - in: path
+        name: id_modelo
+        type: integer
+        required: true
+        description: ID del modelo a actualizar.
+      - in: body
+        name: modelo
+        description: Objeto con el nuevo nombre del modelo.
+        required: true
+        schema:
+          type: object
+          properties:
+            nombre:
+              type: string
+              description: Nuevo nombre para el modelo.
+          required:
+            - nombre
+    responses:
+      200:
+        description: Modelo actualizado exitosamente.
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+            modelo:
+              $ref: '#/definitions/Modelo'
+      400:
+        description: Error de validación (nombre requerido o duplicado).
+        schema:
+          $ref: '#/definitions/ErrorResponse'
+      404:
+        description: Modelo no encontrado.
+        schema:
+          $ref: '#/definitions/ErrorResponse'
+      500:
+        description: Error interno del servidor.
+        schema:
+          $ref: '#/definitions/ErrorResponse'
+    """
     try:
         modelo = Modelo.query.get_or_404(id_modelo)
         data = request.get_json()
@@ -73,6 +202,36 @@ def update_modelo(id_modelo):
 
 @modelo_bp.route('/<int:id_modelo>', methods=['DELETE'])
 def delete_modelo(id_modelo):
+    """
+    Eliminar un modelo por su ID.
+    Este endpoint permite eliminar un modelo específico, siempre y cuando no esté siendo utilizado por ningún calzado.
+    ---
+    tags:
+      - Modelos
+    parameters:
+      - in: path
+        name: id_modelo
+        type: integer
+        required: true
+        description: ID del modelo a eliminar.
+    responses:
+      200:
+        description: Modelo eliminado exitosamente.
+        schema:
+          $ref: '#/definitions/MessageResponse'
+      400:
+        description: No se puede eliminar el modelo porque está asociado a calzados.
+        schema:
+          $ref: '#/definitions/ErrorResponse'
+      404:
+        description: Modelo no encontrado.
+        schema:
+          $ref: '#/definitions/ErrorResponse'
+      500:
+        description: Error interno del servidor.
+        schema:
+          $ref: '#/definitions/ErrorResponse'
+    """
     try:
         modelo = Modelo.query.get_or_404(id_modelo)
         
