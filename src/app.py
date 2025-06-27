@@ -25,6 +25,7 @@ app.register_blueprint(marca_bp)
 app.register_blueprint(modelo_bp)
 app.register_blueprint(categoria_bp)
 app.register_blueprint(color_bp)
+app.register_blueprint(imputados_bp)
 
 if __name__ == "__main__":
     with app.app_context():
