@@ -21,7 +21,7 @@ CORS(app, origins=[
 ], supports_credentials=True)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = (
-    "mysql+mysqlconnector://root:tuclave@localhost:3306/calzado"
+    "mysql+mysqlconnector://root:1234@localhost:3306/huellas_db"
 )
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
