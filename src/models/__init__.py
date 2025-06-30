@@ -14,3 +14,5 @@ from .categoria import Categoria
 from .modelo import Modelo
 from .calzado_imputado import CalzadoImputado
 from .imputado import Imputado
+
+

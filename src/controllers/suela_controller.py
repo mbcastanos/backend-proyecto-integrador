@@ -150,11 +150,28 @@ def get_all_suelas():
           $ref: '#/definitions/ErrorResponse'
     """
     try:
-        suelas = Suela.query.all() 
+        suelas = Suela.query.all()
         suelas_list = [suela.to_dict() for suela in suelas]
-        return jsonify(suelas_list), 200 
+        return jsonify(suelas_list), 200
     except Exception as e:
         return jsonify({"message": "Error al obtener todas las suelas", "error": str(e)}), 500
+
+
+@suela_bp.route("/<int:id>", methods=["GET"])
+def get_suela_by_id(id):
+    try:
+        if id <= 0:
+            return jsonify({"Error": "ID inválido"}), 400
+
+        suela = Suela.query.get(id)
+        if suela is None:
+            return jsonify({"Error": "Suela no encontrada"}), 404
+
+        return jsonify(suela.to_dict())
+
+    except Exception as e:
+        return jsonify({"Error": str(e)}), 500
+
 
 @suela_bp.route("/<int:id_suela>", methods=["PUT"])
 def update_suela(id_suela):
