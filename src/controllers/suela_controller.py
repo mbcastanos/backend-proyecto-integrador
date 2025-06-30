@@ -47,68 +47,30 @@ def create_suela():
         db.session.rollback()
         return jsonify({"error": str(e)}), 400
 
+@suela_bp.route("/", methods=["GET"])
+def get_all_suelas():
+    try:
+        suelas = Suela.query.all()
+        suelas_list = [suela.to_dict() for suela in suelas]
+        return jsonify(suelas_list), 200
+    except Exception as e:
+        return jsonify({"message": "Error al obtener todas las suelas", "error": str(e)}), 500
+
+
 @suela_bp.route("/<int:id>", methods=["GET"])
 def get_suela_by_id(id):
     try:
         if id <= 0:
-            return jsonify({"Error":"ID inválido"}),400
-        
+            return jsonify({"Error": "ID inválido"}), 400
+
         suela = Suela.query.get(id)
-        
         if suela is None:
-            return jsonify({"Error":"Suela no encontrada"}),404
-            
-        return jsonify({
-            "id_suela":suela.id_suela,
-            "id_calzado":suela.id_calzado,
-            "descripcion":suela.descripcion_general
-        })
-    
-    except Exception as e:
-        return jsonify({"Error":str(e)})
+            return jsonify({"Error": "Suela no encontrada"}), 404
 
-@suela_bp.route("/", methods=["GET"])
-def get_all_suelas():
-    try:
-        suelas = Suela.query.all() 
-        suelas_list = [suela.to_dict() for suela in suelas]
-        return jsonify(suelas_list), 200 
-    except Exception as e:
-        return jsonify({"message": "Error al obtener todas las suelas", "error": str(e)}), 500
-
-@suela_bp.route("/<int:id_suela>", methods=["PUT"])
-def update_suela(id_suela):
-    try:
-        suela = Suela.query.get(id_suela)
-        
-        if suela is None:
-            return jsonify({"message": "Suela no encontrada"}), 404
-        
-        data = request.get_json()
-
-        if not data:
-            return jsonify({"message": "No se recibieron datos JSON para la actualizacion"}), 400
-
-        if "id_calzado" in data:
-            from models.calzado import Calzado
-            if Calzado.query.get(data["id_calzado"]) is None:
-                return jsonify({"message": "id_calzado no valido. El calzado no existe."}), 400
-            suela.id_calzado = data["id_calzado"]
-
-        if "descripcion_general" in data:
-            suela.descripcion_general = data["descripcion_general"]
-
-        db.session.commit()
-
-        return jsonify({
-            "message": "Suela actualizada exitosamente",
-            "suela": suela.to_dict()
-        }), 200
+        return jsonify(suela.to_dict())
 
     except Exception as e:
-        db.session.rollback()
-        return jsonify({"message": "Error al actualizar la suela", "error": str(e)}), 500
-    
+        return jsonify({"Error": str(e)}), 500
 
 @suela_bp.route("/<int:id_suela>", methods=["DELETE"])
 def delete_suela(id_suela):
