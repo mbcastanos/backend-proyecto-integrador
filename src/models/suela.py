@@ -1,5 +1,8 @@
 from . import db
 
+# suela.py
+from . import db
+
 class Suela(db.Model):
     __tablename__ = 'Suela'
 
@@ -9,9 +12,10 @@ class Suela(db.Model):
 
     detalles = db.relationship('DetalleSuela', backref='suela', cascade="all, delete-orphan")
 
-    def to_dict(self): # Metodo para el endpoint getAllSuelas y update_suelas
+    def to_dict(self):
         return {
             'id_suela': self.id_suela,
             'id_calzado': self.id_calzado,
-            'descripcion_general': self.descripcion_general
+            'descripcion_general': self.descripcion_general,
+            'detalles': [detalle.to_dict() for detalle in self.detalles]
         }
