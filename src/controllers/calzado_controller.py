@@ -1,5 +1,7 @@
 from flask import Blueprint, jsonify, request
 from models import db, Calzado, Marca, Modelo, Categoria, Color
+from models import Imputado
+from models import CalzadoImputado
 from sqlalchemy.orm import joinedload
 
 calzado_bp = Blueprint('calzado_bp', __name__, url_prefix='/calzados')
@@ -203,3 +205,131 @@ def delete_calzado(id_calzado):
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': str(e)}), 400
+    
+
+@calzado_bp.route('/cargar_calzado_imputado', methods=['POST'])
+def cargar_calzado_imputado():
+    try:
+        data = request.get_json()
+        
+
+        if not data or 'imputado' not in data or 'calzado' not in data:
+            return jsonify({'error': 'Datos incompletos'}), 400
+        
+
+        imputado_data = data['imputado']
+        nuevo_imputado = Imputado(
+            nombre=imputado_data.get('nombre'),
+            dni=imputado_data.get('dni'),
+            direccion=imputado_data.get('direccion'),
+            comisaria=imputado_data.get('comisaria'),
+            jurisdiccion=imputado_data.get('jurisdiccion')
+        )
+        db.session.add(nuevo_imputado)
+        db.session.flush()  
+        
+
+        calzado_data = data['calzado']
+        nuevo_calzado = Calzado(
+            talle=calzado_data.get('talle'),
+            ancho=calzado_data.get('ancho'),
+            alto=calzado_data.get('alto'),
+            tipo_registro=calzado_data.get('tipo_registro'),
+            id_marca=calzado_data.get('id_marca'),
+            id_modelo=calzado_data.get('id_modelo'),
+            id_categoria=calzado_data.get('id_categoria')
+        )
+        db.session.add(nuevo_calzado)
+        db.session.flush()
+        
+
+        relacion = CalzadoImputado(
+            calzado_id_calzado=nuevo_calzado.id_calzado,
+            imputado_id=nuevo_imputado.id
+        )
+        db.session.add(relacion)
+        
+        db.session.commit()
+        
+        return jsonify({
+            'message': 'Datos cargados exitosamente',
+            'imputado_id': nuevo_imputado.id,
+            'calzado_id': nuevo_calzado.id_calzado
+        }), 201
+    
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+
+
+@calzado_bp.route('/buscar_por_dni/<dni>', methods=['GET'])
+def buscar_calzados_por_dni(dni):
+    try:
+
+        imputado = Imputado.query.filter_by(dni=dni).first()
+        
+        if not imputado:
+            return jsonify({'error': f'No se encontró imputado con DNI: {dni}'}), 404
+
+        calzados_imputado = CalzadoImputado.query.filter_by(
+            imputado_id=imputado.id
+        ).all()
+        
+        calzados_data = []
+        for relacion in calzados_imputado:
+            calzado = Calzado.query.options(
+                joinedload(Calzado.marca),
+                joinedload(Calzado.modelo),
+                joinedload(Calzado.categoria),
+                joinedload(Calzado.colores)
+            ).get(relacion.calzado_id_calzado)
+            
+            if calzado:
+                calzados_data.append(calzado.to_dict())
+        
+        resultado = {
+            'imputado': imputado.to_dict(),
+            'calzados': calzados_data
+        }
+        
+        return jsonify(resultado), 200
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@calzado_bp.route('/todos_imputados_con_calzados', methods=['GET'])
+def get_todos_imputados_con_calzados():
+    try:
+
+        imputados = Imputado.query.all()
+        
+        resultado = []
+        
+        for imputado in imputados:
+            calzados_imputado = CalzadoImputado.query.filter_by(
+                imputado_id=imputado.id
+            ).all()
+            
+            calzados_data = []
+            for relacion in calzados_imputado:
+                calzado = Calzado.query.options(
+                    joinedload(Calzado.marca),
+                    joinedload(Calzado.modelo),
+                    joinedload(Calzado.categoria),
+                    joinedload(Calzado.colores)
+                ).get(relacion.calzado_id_calzado)
+                
+                if calzado:
+                    calzados_data.append(calzado.to_dict())
+            
+            resultado.append({
+                'imputado': imputado.to_dict(),
+                'calzados': calzados_data
+            })
+        
+        return jsonify(resultado), 200
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+

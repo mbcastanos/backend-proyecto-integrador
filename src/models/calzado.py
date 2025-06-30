@@ -1,5 +1,6 @@
 from . import db
 
+
 # Tabla intermedia para la relación muchos a muchos entre Calzado y Color
 calzado_color = db.Table('calzado_color',
     db.Column('id_calzado', db.Integer, db.ForeignKey('Calzado.id_calzado'), primary_key=True),

@@ -3,8 +3,8 @@ import MySQLdb
 
 def get_connection():
     return MySQLdb.connect(
-        host="admin",
+        host="localhost",
         user="root",
-        password="tuclave",  # Cambiá esto por tu clave real
-        database="calzado",
+        password="admin",
+        database="huellas_db",
     )
