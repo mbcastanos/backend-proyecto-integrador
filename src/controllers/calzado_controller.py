@@ -9,24 +9,6 @@ calzado_bp = Blueprint('calzado_bp', __name__, url_prefix='/calzados')
 
 @calzado_bp.route('/', methods=['GET'])
 def get_all_calzados():
-    """
-    Obtener todos los calzados registrados.
-    Este endpoint devuelve una lista de todos los calzados con sus detalles completos, incluyendo marca, modelo, categoría y colores.
-    ---
-    tags:
-      - Calzados
-    responses:
-      200:
-        description: Lista de calzados.
-        schema:
-          type: array
-          items:
-            $ref: '#/definitions/Calzado'
-      500:
-        description: Error interno del servidor.
-        schema:
-          $ref: '#/definitions/ErrorResponse'
-    """
     calzados = Calzado.query.options(
         joinedload(Calzado.marca),
         joinedload(Calzado.modelo),
@@ -41,32 +23,6 @@ def get_all_calzados():
 
 @calzado_bp.route('/<int:id_calzado>', methods=['GET'])
 def get_calzado(id_calzado):
-    """
-    Obtener un calzado por su ID.
-    Este endpoint devuelve los detalles de un calzado específico utilizando su ID.
-    ---
-    tags:
-      - Calzados
-    parameters:
-      - in: path
-        name: id_calzado
-        type: integer
-        required: true
-        description: ID único del calzado a obtener.
-    responses:
-      200:
-        description: Detalles del calzado.
-        schema:
-          $ref: '#/definitions/Calzado'
-      404:
-        description: Calzado no encontrado.
-        schema:
-          $ref: '#/definitions/ErrorResponse'
-      500:
-        description: Error interno del servidor.
-        schema:
-          $ref: '#/definitions/ErrorResponse'
-    """
     calzado = Calzado.query.options(
         joinedload(Calzado.marca),
         joinedload(Calzado.modelo),
@@ -78,37 +34,6 @@ def get_calzado(id_calzado):
 
 @calzado_bp.route('/', methods=['POST'])
 def create_calzado():
-    """
-    Crear un nuevo calzado.
-    Este endpoint permite crear un nuevo registro de calzado, asociándolo opcionalmente con marcas, modelos, categorías y colores existentes.
-    ---
-    tags:
-      - Calzados
-    parameters:
-      - in: body
-        name: calzado
-        description: Objeto de calzado a crear.
-        required: true
-        schema:
-          $ref: '#/definitions/CalzadoInput'
-    responses:
-      201:
-        description: Calzado creado exitosamente.
-        schema:
-          type: object
-          properties:
-            message: {"type": "string"}
-            calzado:
-              $ref: '#/definitions/Calzado'
-      400:
-        description: Error de validación o ID de relación no encontrado.
-        schema:
-          $ref: '#/definitions/ErrorResponse'
-      500:
-        description: Error interno del servidor.
-        schema:
-          $ref: '#/definitions/ErrorResponse'
-    """
     try:
         data = request.get_json()
         
@@ -159,24 +84,6 @@ def create_calzado():
 
 @calzado_bp.route('/getAllDubitadas', methods=['GET'])
 def get_all_dubitadas():
-    """
-    Obtener todos los calzados de tipo 'dubitada'.
-    Este endpoint devuelve una lista de calzados con tipo de registro 'dubitada'.
-    ---
-    tags:
-      - Calzados
-    responses:
-      200:
-        description: Lista de calzados dubitados.
-        schema:
-          type: array
-          items:
-            $ref: '#/definitions/Calzado'
-      500:
-        description: Error interno del servidor.
-        schema:
-          $ref: '#/definitions/ErrorResponse'
-    """
     calzados = Calzado.query.options(
         joinedload(Calzado.marca),
         joinedload(Calzado.modelo),
@@ -191,36 +98,6 @@ def get_all_dubitadas():
 
 @calzado_bp.route('/getDubitadaById/<int:id_calzado>', methods=['GET'])
 def get_dubitada_by_id(id_calzado):
-    """
-    Obtener un calzado 'dubitada' por su ID.
-    Este endpoint devuelve un calzado específico solo si su tipo de registro es 'dubitada'.
-    ---
-    tags:
-      - Calzados
-    parameters:
-      - in: path
-        name: id_calzado
-        type: integer
-        required: true
-        description: ID del calzado dubitado a obtener.
-    responses:
-      200:
-        description: Detalles del calzado dubitado.
-        schema:
-          $ref: '#/definitions/Calzado'
-      400:
-        description: El calzado encontrado no es de tipo 'dubitada'.
-        schema:
-          $ref: '#/definitions/ErrorResponse'
-      404:
-        description: Calzado no encontrado.
-        schema:
-          $ref: '#/definitions/ErrorResponse'
-      500:
-        description: Error interno del servidor.
-        schema:
-          $ref: '#/definitions/ErrorResponse'
-    """
     calzado = Calzado.query.options(
         joinedload(Calzado.marca),
         joinedload(Calzado.modelo),
@@ -235,24 +112,6 @@ def get_dubitada_by_id(id_calzado):
 
 @calzado_bp.route('/getAllIndubitadas', methods=['GET'])
 def get_all_indubitadas():
-    """
-    Obtener todos los calzados de tipo 'indubitada'.
-    Este endpoint devuelve una lista de calzados con tipo de registro 'indubitada_proveedor' o 'indubitada_comisaria'.
-    ---
-    tags:
-      - Calzados
-    responses:
-      200:
-        description: Lista de calzados indubitados.
-        schema:
-          type: array
-          items:
-            $ref: '#/definitions/Calzado'
-      500:
-        description: Error interno del servidor.
-        schema:
-          $ref: '#/definitions/ErrorResponse'
-    """
     calzados = Calzado.query.options(
         joinedload(Calzado.marca),
         joinedload(Calzado.modelo),
@@ -267,36 +126,6 @@ def get_all_indubitadas():
 
 @calzado_bp.route('/getIndubitadaById/<int:id_calzado>', methods=['GET'])
 def get_indubitada_by_id(id_calzado):
-    """
-    Obtener un calzado 'indubitada' por su ID.
-    Este endpoint devuelve un calzado específico solo si su tipo de registro es 'indubitada_proveedor' o 'indubitada_comisaria'.
-    ---
-    tags:
-      - Calzados
-    parameters:
-      - in: path
-        name: id_calzado
-        type: integer
-        required: true
-        description: ID del calzado indubitado a obtener.
-    responses:
-      200:
-        description: Detalles del calzado indubitado.
-        schema:
-          $ref: '#/definitions/Calzado'
-      400:
-        description: El calzado encontrado no es de tipo 'indubitada'.
-        schema:
-          $ref: '#/definitions/ErrorResponse'
-      404:
-        description: Calzado no encontrado.
-        schema:
-          $ref: '#/definitions/ErrorResponse'
-      500:
-        description: Error interno del servidor.
-        schema:
-          $ref: '#/definitions/ErrorResponse'
-    """
     calzado = Calzado.query.options(
         joinedload(Calzado.marca),
         joinedload(Calzado.modelo),
@@ -311,46 +140,6 @@ def get_indubitada_by_id(id_calzado):
 
 @calzado_bp.route('/<int:id_calzado>', methods=['PATCH'])
 def update_calzado(id_calzado):
-    """
-    Actualizar parcialmente un calzado existente.
-    Este endpoint permite modificar uno o varios campos de un calzado existente, incluyendo sus relaciones.
-    ---
-    tags:
-      - Calzados
-    parameters:
-      - in: path
-        name: id_calzado
-        type: integer
-        required: true
-        description: ID del calzado a actualizar.
-      - in: body
-        name: calzado
-        description: Objeto con los campos del calzado a actualizar.
-        required: true
-        schema:
-          $ref: '#/definitions/CalzadoInput'
-    responses:
-      200:
-        description: Calzado actualizado exitosamente.
-        schema:
-          type: object
-          properties:
-            message: {"type": "string"}
-            calzado:
-              $ref: '#/definitions/Calzado'
-      400:
-        description: Error de validación o ID de relación no encontrado.
-        schema:
-          $ref: '#/definitions/ErrorResponse'
-      404:
-        description: Calzado no encontrado.
-        schema:
-          $ref: '#/definitions/ErrorResponse'
-      500:
-        description: Error interno del servidor.
-        schema:
-          $ref: '#/definitions/ErrorResponse'
-    """
     try:
         calzado = Calzado.query.get_or_404(id_calzado)
         data = request.get_json()

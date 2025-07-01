@@ -96,32 +96,6 @@ def create_user():
 
 @login_bp.route("/me", methods=["GET"])
 def obtener_usuario_actual():
-    """
-    Obtener información del usuario autenticado (requiere token de autenticación).
-    Este endpoint devuelve los detalles del usuario cuya sesión está activa, basándose en el token JWT proporcionado.
-    ---
-    tags:
-      - Usuarios
-    security:
-      - JWT: []
-    responses:
-      200:
-        description: Información del usuario actual.
-        schema:
-          $ref: '#/definitions/Usuario'
-      401:
-        description: No autorizado (token faltante o inválido).
-        schema:
-          $ref: '#/definitions/ErrorResponse'
-      404:
-        description: Usuario no encontrado (raro si el token es válido).
-        schema:
-          $ref: '#/definitions/ErrorResponse'
-      500:
-        description: Error interno del servidor.
-        schema:
-          $ref: '#/definitions/ErrorResponse'
-    """
     usuario = Usuario.query.get(g.user["user_id"])
     if not usuario:
         return jsonify({"error": "Usuario no encontrado"}), 404
@@ -193,38 +167,6 @@ def actualizar_usuario(user_id):
 
 @login_bp.route("/usuarios/<int:id>", methods=["GET"])
 def get_user_data_by_id(id):
-    """
-    Obtener un usuario por su ID (requiere token de autenticación).
-    Este endpoint devuelve los detalles de un usuario específico utilizando su ID.
-    ---
-    tags:
-      - Usuarios
-    security:
-      - JWT: []
-    parameters:
-      - in: path
-        name: id
-        type: integer
-        required: true
-        description: ID único del usuario a obtener.
-    responses:
-      200:
-        description: Detalles del usuario.
-        schema:
-          $ref: '#/definitions/Usuario'
-      401:
-        description: No autorizado (token faltante o inválido).
-        schema:
-          $ref: '#/definitions/ErrorResponse'
-      404:
-        description: Usuario no encontrado.
-        schema:
-          $ref: '#/definitions/ErrorResponse'
-      500:
-        description: Error interno del servidor.
-        schema:
-          $ref: '#/definitions/ErrorResponse'
-    """
     usuario = Usuario.query.get(id)
     if not usuario:
         return jsonify({"error": "Usuario no encontrado"}), 404
@@ -238,38 +180,7 @@ def get_user_data_by_id(id):
 
 @login_bp.route("/usuarios/<int:id>", methods=["DELETE"])
 def delete_user_by_id(id):
-    """
-    Eliminar un usuario por su ID (requiere token de autenticación).
-    Este endpoint permite eliminar un usuario específico.
-    ---
-    tags:
-      - Usuarios
-    security:
-      - JWT: []
-    parameters:
-      - in: path
-        name: id
-        type: integer
-        required: true
-        description: ID del usuario a eliminar.
-    responses:
-      200:
-        description: Usuario eliminado exitosamente.
-        schema:
-          $ref: '#/definitions/MessageResponse'
-      401:
-        description: No autorizado (token faltante o inválido).
-        schema:
-          $ref: '#/definitions/ErrorResponse'
-      404:
-        description: Usuario no encontrado.
-        schema:
-          $ref: '#/definitions/ErrorResponse'
-      500:
-        description: Error interno del servidor.
-        schema:
-          $ref: '#/definitions/ErrorResponse'
-    """
+
     usuario = Usuario.query.get(id)
     
     if not usuario:
