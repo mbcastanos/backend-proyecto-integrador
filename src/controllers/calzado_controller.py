@@ -242,6 +242,14 @@ def cargar_calzado_imputado():
         db.session.add(nuevo_calzado)
         db.session.flush()
         
+        # Manejar colores si se proporcionan
+        if 'id_colores' in calzado_data and calzado_data['id_colores']:
+            for color_id in calzado_data['id_colores']:
+                color = Color.query.get(color_id)
+                if color:
+                    nuevo_calzado.colores.append(color)
+                else:
+                    return jsonify({'error': f'Color con ID {color_id} no encontrado'}), 400
 
         relacion = CalzadoImputado(
             calzado_id_calzado=nuevo_calzado.id_calzado,
