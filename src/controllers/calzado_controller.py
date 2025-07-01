@@ -218,15 +218,22 @@ def cargar_calzado_imputado():
         
 
         imputado_data = data['imputado']
-        nuevo_imputado = Imputado(
-            nombre=imputado_data.get('nombre'),
-            dni=imputado_data.get('dni'),
-            direccion=imputado_data.get('direccion'),
-            comisaria=imputado_data.get('comisaria'),
-            jurisdiccion=imputado_data.get('jurisdiccion')
-        )
-        db.session.add(nuevo_imputado)
-        db.session.flush()  
+        
+        # Verificar si el imputado ya existe por DNI
+        imputado_existente = Imputado.query.filter_by(dni=imputado_data.get('dni')).first()
+
+        if imputado_existente:
+            nuevo_imputado = imputado_existente
+        else:
+            nuevo_imputado = Imputado(
+                nombre=imputado_data.get('nombre'),
+                dni=imputado_data.get('dni'),
+                direccion=imputado_data.get('direccion'),
+                comisaria=imputado_data.get('comisaria'),
+                jurisdiccion=imputado_data.get('jurisdiccion')
+            )
+            db.session.add(nuevo_imputado)
+            db.session.flush()  
         
 
         calzado_data = data['calzado']
