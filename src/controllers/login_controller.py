@@ -7,11 +7,14 @@ from models import db, Usuario
 from controllers.auth import token_required
 from dotenv import load_dotenv
 import os
+from pathlib import Path # Importa Path para manejo de rutas de archivos.
 
-load_dotenv()
+load_dotenv(dotenv_path=Path(__file__).resolve().parent / ".env") # Carga variables de entorno desde el archivo .env ubicado en el directorio raíz del script.
+
 # Para los que hagan pull: definan esta variable de entorno en un archivo .env
 # Esto es temporal hasta que se suba el codigo a un servidor
 secret_key = os.getenv("SECRET_KEY")
+
 
 login_bp = Blueprint('login_bp', __name__)
 CORS(login_bp, origins=["http://localhost:3000", "http://127.0.0.1:3000"], supports_credentials=True)
@@ -44,6 +47,9 @@ def login():
         }
 
         token = jwt.encode(payload, secret_key, algorithm="HS256")
+        # Si el token es bytes, lo decodifica a una cadena UTF-8.
+        if isinstance(token, bytes):
+            token = token.decode("utf-8")
 
         return jsonify({
             "success": True,
@@ -55,6 +61,7 @@ def login():
     except Exception as e:
         print("Error en login:", e)
         return jsonify({"error": "Error interno del servidor"}), 500
+
     
 @login_bp.route("/usuarios", methods = ["POST"])
 def create_user():
@@ -159,7 +166,9 @@ def actualizar_usuario(user_id):
         }
 
         new_token = jwt.encode(new_payload, secret_key, algorithm="HS256")
-
+        if isinstance(new_token, bytes):
+            new_token = new_token.decode("utf-8")
+            
         return jsonify({"message": "Usuario actualizado exitosamente", "new_token": new_token}), 200
     except Exception as e:
         db.session.rollback()

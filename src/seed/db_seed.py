@@ -1,11 +1,13 @@
 import os
 import mysql.connector
 from dotenv import load_dotenv
+import bcrypt
+
 
 load_dotenv() 
 
 print(f"MYSQL_PORT: {os.getenv('MYSQL_PORT', '3306')}")
-print(f"MYSQL_DATABASE: {os.getenv('MYSQL_DATABASE')}")
+print(f"MYSQL_DATABASE: {os.getenv('MYSQL_DATABASE', "huellasdb")}")
 print(f"Host: localhost")
 
 try:
@@ -40,18 +42,22 @@ if cantidad > 0:
 else:
     print("Ejecutando seed...")
 
-    # Insertar usuarios de prueba
-    usuarios = [
-        ("admin", "admin123", "admin"),
-        ("usuario1", "password123", "user"),
-        ("analista", "analista123", "analyst")
-    ]
+usuarios = [
+    ("admin", "admin123", "admin"),
+    ("usuario1", "password123", "user"),
+    ("analista", "analista123", "analyst")
+]
 
-    for usuario in usuarios:
+# Itera sobre una lista de usuarios, verifica si cada usuario existe en la DB;
+# si no, hashea la contraseña y lo inserta en la tabla 'Usuarios'.
+for username, password, role in usuarios:
+    cursor.execute("SELECT COUNT(*) FROM Usuarios WHERE username = %s", (username,))
+    if cursor.fetchone()[0] == 0:
+        hashed = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode("utf-8")
         cursor.execute("""
             INSERT INTO Usuarios (username, password_hash, role)
             VALUES (%s, %s, %s)
-        """, usuario)
+        """, (username, hashed, role))
 
     # Insertar cuadrantes
     cuadrantes = [
@@ -193,7 +199,7 @@ else:
     for i, calzado_id in enumerate(calzado_ids):
         color_id = color_ids[i % len(color_ids)]
         cursor.execute("""
-            INSERT INTO calzado_color (id_calzado, id_color)
+            INSERT IGNORE INTO calzado_color (id_calzado, id_color)
             VALUES (%s, %s)
         """, (calzado_id, color_id))
 

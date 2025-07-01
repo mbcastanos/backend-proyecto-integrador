@@ -15,7 +15,14 @@ SWAGGER_SPEC = {
     "produces": [
         "application/json"
     ],
-
+    "securityDefinitions": {
+        "JWT": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header",
+            "description": 'Ingresa el token JWT con el prefijo "Bearer " (ej. "Bearer eyJhbGciOiJIUzI1NiIsIHNvbWV0b2tlbi")'
+        }
+    },
     "definitions": {
         "Calzado": {
             "type": "object",
@@ -238,6 +245,9 @@ SWAGGER_SPEC = {
                 "nombre": {"type": "string", "maxLength": 100, "description": "Nombre del imputado"},
                 "apellido": {"type": "string", "maxLength": 100, "description": "Apellido del imputado"},
                 "dni": {"type": "string", "maxLength": 20, "description": "DNI del imputado"},
+                "direccion": {"type": "string", "maxLength": 255, "description": "Dirección del imputado"},
+                "comisaria": {"type": "string", "maxLength": 255, "description": "Comisaría de referencia del imputado"},
+                "jurisdiccion": {"type": "string", "maxLength": 255, "description": "Jurisdicción del imputado"},
                 "calzados": {
                     "type": "array",
                     "items": {
@@ -260,7 +270,7 @@ SWAGGER_SPEC = {
                     "description": "Lista de calzados asociados al imputado"
                 }
             },
-            "required": ["nombre", "apellido", "dni"]
+            "required": ["nombre", "apellido", "dni", "direccion", "comisaria", "jurisdiccion"]
         },
         "MessageResponse": {
             "type": "object",
@@ -327,6 +337,7 @@ SWAGGER_SPEC = {
             "get": {
                 "tags": ["Usuarios"],
                 "summary": "Obtener todos los usuarios registrados.",
+                "security": [{"JWT": []}],
                 "responses": {
                     "200": {"description": "Lista de usuarios.", "schema": {"type": "array", "items": {"$ref": "#/definitions/Usuario"}}},
                     "404": {"description": "No hay usuarios registrados.", "schema": {"$ref": "#/definitions/MessageResponse"}},
@@ -339,6 +350,7 @@ SWAGGER_SPEC = {
                 "tags": ["Usuarios"],
                 "summary": "Obtener información del usuario autenticado.",
                 "description": "Este endpoint devuelve los detalles del usuario cuya sesión está activa, basándose en el token JWT proporcionado.",
+                "security": [{"JWT": []}],
                 "responses": {
                     "200": {"description": "Información del usuario actual.", "schema": {"$ref": "#/definitions/Usuario"}},
                     "401": {"description": "No autorizado (token faltante o inválido).", "schema": {"$ref": "#/definitions/ErrorResponse"}},
@@ -352,6 +364,7 @@ SWAGGER_SPEC = {
                 "tags": ["Usuarios"],
                 "summary": "Actualizar un usuario por su ID.",
                 "description": "Permite a un usuario actualizar su propio perfil o a un administrador actualizar cualquier usuario.",
+                "security": [{"JWT": []}],
                 "parameters": [
                     {
                         "in": "path",
@@ -399,6 +412,7 @@ SWAGGER_SPEC = {
                 "tags": ["Usuarios"],
                 "summary": "Obtener un usuario por su ID.",
                 "description": "Este endpoint devuelve los detalles de un usuario específico utilizando su ID.",
+                "security": [{"JWT": []}],
                 "parameters": [
                     {
                         "in": "path",
@@ -419,6 +433,7 @@ SWAGGER_SPEC = {
                 "tags": ["Usuarios"],
                 "summary": "Eliminar un usuario por su ID.",
                 "description": "Este endpoint permite eliminar un usuario específico.",
+                "security": [{"JWT": []}],
                 "parameters": [
                     {
                         "in": "path",
@@ -440,6 +455,7 @@ SWAGGER_SPEC = {
             "get": {
                 "tags": ["Calzados"],
                 "summary": "Obtener todos los calzados registrados.",
+                "security": [{"JWT": []}],
                 "responses": {
                     "200": {"description": "Lista de calzados.", "schema": {"type": "array", "items": {"$ref": "#/definitions/Calzado"}}},
                     "500": {"description": "Error interno del servidor.", "schema": {"$ref": "#/definitions/ErrorResponse"}}
@@ -448,6 +464,7 @@ SWAGGER_SPEC = {
             "post": {
                 "tags": ["Calzados"],
                 "summary": "Crear un nuevo calzado.",
+                "security": [{"JWT": []}],
                 "parameters": [
                     {
                         "in": "body",
@@ -477,6 +494,7 @@ SWAGGER_SPEC = {
             "get": {
                 "tags": ["Calzados"],
                 "summary": "Obtener un calzado por su ID.",
+                "security": [{"JWT": []}],
                 "parameters": [
                     {
                         "in": "path",
@@ -495,6 +513,7 @@ SWAGGER_SPEC = {
             "patch": {
                 "tags": ["Calzados"],
                 "summary": "Actualizar parcialmente un calzado existente.",
+                "security": [{"JWT": []}],
                 "parameters": [
                     {
                         "in": "path",
@@ -530,6 +549,7 @@ SWAGGER_SPEC = {
             "delete": {
                 "tags": ["Calzados"],
                 "summary": "Eliminar un calzado por su ID.",
+                "security": [{"JWT": []}],
                 "parameters": [
                     {
                         "in": "path",
@@ -552,6 +572,7 @@ SWAGGER_SPEC = {
                 "tags": ["Calzados", "Imputados"],
                 "summary": "Asocia un calzado a uno o más imputados.",
                 "description": "Este endpoint permite vincular un calzado existente con uno o más imputados existentes.",
+                "security": [{"JWT": []}],
                 "parameters": [
                     {
                         "in": "path",
@@ -591,6 +612,7 @@ SWAGGER_SPEC = {
                 "tags": ["Calzados", "Imputados"],
                 "summary": "Desasocia un calzado de un imputado.",
                 "description": "Este endpoint permite desvincular un calzado de un imputado específico.",
+                "security": [{"JWT": []}],
                 "parameters": [
                     {
                         "in": "path",
@@ -1414,6 +1436,7 @@ SWAGGER_SPEC = {
             "get": {
                 "tags": ["Imputados"],
                 "summary": "Obtener todos los imputados registrados.",
+                "security": [{"JWT": []}],
                 "responses": {
                     "200": {"description": "Lista de imputados.", "schema": {"type": "array", "items": {"$ref": "#/definitions/Imputado"}}},
                     "404": {"description": "No hay imputados registrados.", "schema": {"$ref": "#/definitions/MessageResponse"}},
@@ -1423,6 +1446,7 @@ SWAGGER_SPEC = {
             "post": {
                 "tags": ["Imputados"],
                 "summary": "Crear un nuevo imputado.",
+                "security": [{"JWT": []}],
                 "parameters": [
                     {
                         "in": "body",
@@ -1451,6 +1475,7 @@ SWAGGER_SPEC = {
             "get": {
                 "tags": ["Imputados"],
                 "summary": "Obtener un imputado por su ID.",
+                "security": [{"JWT": []}],
                 "parameters": [
                     {
                         "in": "path",
@@ -1469,6 +1494,7 @@ SWAGGER_SPEC = {
             "patch": {
                 "tags": ["Imputados"],
                 "summary": "Actualizar parcialmente un imputado existente.",
+                "security": [{"JWT": []}],
                 "parameters": [
                     {
                         "in": "path",
@@ -1502,6 +1528,7 @@ SWAGGER_SPEC = {
             "delete": {
                 "tags": ["Imputados"],
                 "summary": "Eliminar un imputado por su ID.",
+                "security": [{"JWT": []}],
                 "parameters": [
                     {
                         "in": "path",
