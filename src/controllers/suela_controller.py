@@ -47,6 +47,7 @@ def create_suela():
         db.session.rollback()
         return jsonify({"error": str(e)}), 400
 
+
 @suela_bp.route("/", methods=["GET"])
 def get_all_suelas():
     try:
@@ -71,6 +72,7 @@ def get_suela_by_id(id):
 
     except Exception as e:
         return jsonify({"Error": str(e)}), 500
+
 
 
 @suela_bp.route("/<int:id_suela>", methods=["PUT"])

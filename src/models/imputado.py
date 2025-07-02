@@ -4,12 +4,18 @@ class Imputado(db.Model):
     __tablename__ = 'Imputado'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-
     nombre = db.Column(db.String(100), nullable=False)
     dni = db.Column(db.String(20), nullable=False, unique=True)
     direccion = db.Column(db.String(200), nullable=True)
     comisaria = db.Column(db.String(100), nullable=True)
     jurisdiccion = db.Column(db.String(100), nullable=True)
+
+    calzados = db.relationship(
+        'Calzado',
+        secondary='calzado_has_imputado',
+        backref='imputados',
+        lazy='subquery'
+    )
 
     def to_dict(self):
         return {
@@ -18,7 +24,6 @@ class Imputado(db.Model):
             'dni': self.dni,
             'direccion': self.direccion,
             'comisaria': self.comisaria,
-            'jurisdiccion': self.jurisdiccion
-
-        } 
-
+            'jurisdiccion': self.jurisdiccion,
+            'calzados': [calzado.to_dict() for calzado in self.calzados] 
+        }
