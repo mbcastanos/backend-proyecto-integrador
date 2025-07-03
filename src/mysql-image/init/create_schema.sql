@@ -37,3 +37,27 @@ CREATE TABLE IF NOT EXISTS DetalleSuela (
     FOREIGN KEY (id_cuadrante) REFERENCES Cuadrante(id_cuadrante),
     FOREIGN KEY (id_forma) REFERENCES FormaGeometrica(id_forma)
 );
+
+CREATE TABLE IF NOT EXISTS Usuarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password_hash VARCHAR(128) NOT NULL,
+    role VARCHAR(20) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Imputado (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    dni VARCHAR(20) NOT NULL UNIQUE,
+    direccion VARCHAR(200),
+    comisaria VARCHAR(100),
+    jurisdiccion VARCHAR(100)
+);
+
+CREATE TABLE IF NOT EXISTS calzado_has_imputado (
+    calzado_id_calzado INT NOT NULL,
+    imputado_id INT NOT NULL,
+    PRIMARY KEY (calzado_id_calzado, imputado_id),
+    FOREIGN KEY (calzado_id_calzado) REFERENCES Calzado(id_calzado) ON DELETE CASCADE,
+    FOREIGN KEY (imputado_id) REFERENCES Imputado(id) ON DELETE CASCADE
+);

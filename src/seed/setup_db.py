@@ -16,7 +16,7 @@ try:
     print("Conexión exitosa a MySQL")
     
     cursor = conn.cursor()
-    database_name = os.getenv("MYSQL_DATABASE", "huellas_db")
+    database_name = os.getenv("MYSQL_DATABASE", "huellasdb")
     cursor.execute(f"CREATE DATABASE IF NOT EXISTS {database_name}")
     print(f"Base de datos '{database_name}' creada/verificada")
 

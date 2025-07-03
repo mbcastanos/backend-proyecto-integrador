@@ -1,5 +1,7 @@
 from flask import Flask, jsonify, Blueprint
 from flask_cors import CORS
+from flasgger import Swagger
+from swagger_spec import SWAGGER_SPEC
 from models import db, Calzado, Suela, DetalleSuela
 from controllers.calzado_controller import calzado_bp
 from controllers.suela_controller import suela_bp
@@ -16,14 +18,36 @@ app = Flask(__name__)
 CORS(app, origins=[
     "http://localhost:3000",
     "http://127.0.0.1:3000",
-    "http://localhost:5173",  
+    "http://localhost:5173",
     "http://127.0.0.1:5173"
 ], supports_credentials=True)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = (
-    "mysql+mysqlconnector://root:tuclave@localhost:3306/calzadoN"
+
+    "mysql+mysqlconnector://root:@localhost:3306/huellasdb"
+
 )
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+# Configuracion de Flasgger
+swagger_config = {
+    "headers": [],
+    "specs": [
+        {
+            "endpoint": 'apispec_1',
+            "route": '/apispec_1.json',
+            "rule_filter": lambda rule: True,
+            "model_filter": lambda tag: True,
+        }
+    ],
+    "static_url_path": "/flasgger_static",
+    "swagger_ui": True,
+    "specs_route": "/apidocs/",
+    # diccionario SWAGGER_SPEC importado para todas las definiciones y rutas
+    **SWAGGER_SPEC
+}
+
+swagger = Swagger(app, config=swagger_config)
 
 db.init_app(app)
 
