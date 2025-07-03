@@ -225,22 +225,15 @@ def cargar_calzado_imputado():
         
 
         imputado_data = data['imputado']
-        
-        # Verificar si el imputado ya existe por DNI
-        imputado_existente = Imputado.query.filter_by(dni=imputado_data.get('dni')).first()
-
-        if imputado_existente:
-            nuevo_imputado = imputado_existente
-        else:
-            nuevo_imputado = Imputado(
-                nombre=imputado_data.get('nombre'),
-                dni=imputado_data.get('dni'),
-                direccion=imputado_data.get('direccion'),
-                comisaria=imputado_data.get('comisaria'),
-                jurisdiccion=imputado_data.get('jurisdiccion')
-            )
-            db.session.add(nuevo_imputado)
-            db.session.flush()  
+        nuevo_imputado = Imputado(
+            nombre=imputado_data.get('nombre'),
+            dni=imputado_data.get('dni'),
+            direccion=imputado_data.get('direccion'),
+            comisaria=imputado_data.get('comisaria'),
+            jurisdiccion=imputado_data.get('jurisdiccion')
+        )
+        db.session.add(nuevo_imputado)
+        db.session.flush()  
         
 
         calzado_data = data['calzado']
@@ -256,14 +249,6 @@ def cargar_calzado_imputado():
         db.session.add(nuevo_calzado)
         db.session.flush()
         
-        # Manejar colores si se proporcionan
-        if 'id_colores' in calzado_data and calzado_data['id_colores']:
-            for color_id in calzado_data['id_colores']:
-                color = Color.query.get(color_id)
-                if color:
-                    nuevo_calzado.colores.append(color)
-                else:
-                    return jsonify({'error': f'Color con ID {color_id} no encontrado'}), 400
 
         relacion = CalzadoImputado(
             calzado_id_calzado=nuevo_calzado.id_calzado,
@@ -606,3 +591,66 @@ def generar_reporte_pdf():
         return jsonify({'error': f'Error al generar el PDF: {str(e)}'}), 500
 
 
+@calzado_bp.route('/editar_calzado_imputado/<int:id_calzado>', methods=['PATCH'])
+def editar_calzado_e_imputado(id_calzado):
+    data = request.get_json()
+    calzado_data = data.get("calzado")
+    imputado_data = data.get("imputado")
+
+    calzado = Calzado.query.get(id_calzado)
+    if not calzado:
+        return jsonify({"error": "Calzado no encontrado"}), 404
+
+    imputado = (
+        CalzadoImputado.query
+        .filter_by(calzado_id_calzado=id_calzado)
+        .first()
+    )
+    if not imputado:
+        return jsonify({"error": "Imputado no asociado a este calzado"}), 404
+
+    for key, value in calzado_data.items():
+        setattr(calzado, key, value)
+
+    for key, value in imputado_data.items():
+        setattr(imputado, key, value)
+
+    db.session.commit()
+    return jsonify({"message": "Actualizado correctamente"}), 200
+
+
+@calzado_bp.route('/asignar_calzado_imputado', methods=['POST'])
+def asignar_calzado_imputado():
+    data = request.get_json()
+    id_calzado = data.get("id_calzado")
+    id_imputado = data.get("id_imputado")
+
+    nueva_relacion = CalzadoImputado(
+        calzado_id_calzado=id_calzado,
+        imputado_id_imputado=id_imputado
+    )
+    db.session.add(nueva_relacion)
+    db.session.commit()
+
+    return jsonify({"message": "Asignación realizada correctamente"}), 201
+
+@calzado_bp.route('/eliminar_calzado_imputado', methods=['DELETE'])
+def eliminar_relacion_calzado_imputado():
+    data = request.get_json()
+    dni = data["imputado"]["dni"]
+    calzado_id = data["calzado_id"]
+
+    relacion = (
+        CalzadoImputado.query
+        .join(Imputado)
+        .filter(Imputado.dni == dni, CalzadoImputado.calzado_id_calzado == calzado_id)
+        .first()
+    )
+
+    if not relacion:
+        return jsonify({"error": "Relación no encontrada"}), 404
+
+    db.session.delete(relacion)
+    db.session.commit()
+
+    return jsonify({"message": "Relación eliminada correctamente"}), 200

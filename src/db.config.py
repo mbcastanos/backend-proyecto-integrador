@@ -5,6 +5,7 @@ def get_connection():
     return MySQLdb.connect(
         host="localhost",
         user="root",
-        password="",
+
+        password="tuclave",
         database="huellasdb",
     )
