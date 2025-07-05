@@ -12,6 +12,7 @@ from controllers.modelo_controller import modelo_bp
 from controllers.categoria_controller import categoria_bp
 from controllers.color_controller import color_bp
 from controllers.imputados_controller import imputados_bp
+import os
 
 app = Flask(__name__)
 
@@ -23,9 +24,8 @@ CORS(app, origins=[
 ], supports_credentials=True)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = (
-
-    "mysql+mysqlconnector://root:@localhost:3306/huellasdb"
-
+    f"mysql+mysqlconnector://{os.environ.get('MYSQL_USER')}:{os.environ.get('MYSQL_PASSWORD')}"
+    f"@{os.environ.get('MYSQL_HOST')}:{os.environ.get('MYSQL_PORT')}/{os.environ.get('MYSQL_DATABASE')}"
 )
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
