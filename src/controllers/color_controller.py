@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from models import db, Color
+from src.models import db, Color
 
 color_bp = Blueprint('color_bp', __name__, url_prefix='/colores')
 

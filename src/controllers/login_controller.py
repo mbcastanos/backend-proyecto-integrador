@@ -3,7 +3,7 @@ import jwt
 import bcrypt
 from flask import Blueprint, Response, g, json, jsonify, request
 from flask_cors import CORS
-from models import db, Usuario
+from src.models import db, Usuario
 from controllers.auth import token_required
 from dotenv import load_dotenv
 import os
