@@ -1,7 +1,5 @@
 from flask import Blueprint, jsonify, request, send_file, make_response
-from models import db, Calzado, Marca, Modelo, Categoria, Color, FormaGeometrica, Cuadrante, Suela, DetalleSuela
-from models import Imputado
-from models import CalzadoImputado
+from src.models import db, Calzado, Marca, Modelo, Categoria, Color, FormaGeometrica, Cuadrante, Suela, DetalleSuela, Imputado, CalzadoImputado
 from sqlalchemy.orm import joinedload
 import io
 from reportlab.lib.pagesizes import letter
