@@ -1,3 +1,5 @@
+# Servidor de producción para Flask
+gunicorn
 attrs==25.3.0
 bcrypt==4.0.1
 blinker==1.9.0

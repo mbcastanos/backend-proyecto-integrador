@@ -24,8 +24,9 @@ CORS(app, origins=[
 ], supports_credentials=True)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = (
-    f"mysql+mysqlconnector://{os.environ.get('MYSQL_USER')}:{os.environ.get('MYSQL_PASSWORD')}"
-    f"@{os.environ.get('MYSQL_HOST')}:{os.environ.get('MYSQL_PORT')}/{os.environ.get('MYSQL_DATABASE')}"
+
+    "mysql+mysqlconnector://root:@localhost:3306/huellasdb"
+
 )
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
