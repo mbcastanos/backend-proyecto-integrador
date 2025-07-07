@@ -72,8 +72,10 @@ def login():
         return jsonify({"error": "Error interno del servidor"}), 500
 
     
-@login_bp.route("/usuarios", methods = ["POST"])
+@login_bp.route("/usuarios", methods=["POST", "OPTIONS"])
 def create_user():
+    if request.method == "OPTIONS":
+        return jsonify({}), 200
     try:
         data = request.get_json()
         username = data.get("username")
