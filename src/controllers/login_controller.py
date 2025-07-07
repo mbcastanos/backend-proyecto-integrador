@@ -16,7 +16,7 @@ load_dotenv(dotenv_path=Path(__file__).resolve().parent / ".env") # Carga variab
 secret_key = os.getenv("SECRET_KEY")
 
 
-login_bp = Blueprint('login_bp', __name__)
+login_bp = Blueprint('login_bp', __name__, url_prefix='')
 # Usar variable de entorno para orígenes de CORS
 import os
 cors_origins = os.getenv("CORS_ORIGINS", "").split(",")
