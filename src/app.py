@@ -25,6 +25,13 @@ CORS(app, origins=[
     "http://127.0.0.1:5173"
 ], supports_credentials=True)
 
+# Middleware para agregar headers CORS necesarios a todas las respuestas
+@app.after_request
+def after_request(response):
+    response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
+    response.headers.add("Access-Control-Allow-Methods", "GET,POST,OPTIONS,PATCH,DELETE")
+    return response
+
 db_url = os.getenv("DATABASE_URL")
 if db_url and db_url.startswith("mysql://"):
     db_url = db_url.replace("mysql://", "mysql+mysqlconnector://", 1)

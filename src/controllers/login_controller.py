@@ -17,15 +17,6 @@ secret_key = os.getenv("SECRET_KEY")
 login_bp = Blueprint('login_bp', __name__, url_prefix='')
 # Usar variable de entorno para orígenes de CORS
 import os
-cors_origins = os.getenv("CORS_ORIGINS", "").split(",")
-cors_origins = [o.strip() for o in cors_origins if o.strip()]
-if not cors_origins:
-    cors_origins = [
-        "https://huellasfrontend.vercel.app",
-        "https://huellasfrontend-nr4olfgfj-gonzav104s-proyectos.vercel.app"
-    ]
-CORS(login_bp, origins=cors_origins, supports_credentials=True)
-
 
 @login_bp.route("/auth/login", methods=["POST", "OPTIONS"])
 def login():
