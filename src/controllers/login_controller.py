@@ -9,8 +9,6 @@ from dotenv import load_dotenv
 import os
 from pathlib import Path # Importa Path para manejo de rutas de archivos.
 
-load_dotenv(dotenv_path=Path(__file__).resolve().parent / ".env") # Carga variables de entorno desde el archivo .env ubicado en el directorio raíz del script.
-
 # Para los que hagan pull: definan esta variable de entorno en un archivo .env
 # Esto es temporal hasta que se suba el codigo a un servidor
 secret_key = os.getenv("SECRET_KEY")
