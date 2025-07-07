@@ -1,3 +1,5 @@
+# Driver recomendado para SQLAlchemy con MySQL en producción
+mysql-connector-python
 # Servidor de producción para Flask
 gunicorn
 attrs==25.3.0

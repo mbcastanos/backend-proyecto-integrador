@@ -25,7 +25,10 @@ CORS(app, origins=[
     "http://127.0.0.1:5173"
 ], supports_credentials=True)
 
-app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
+db_url = os.getenv("DATABASE_URL")
+if db_url and db_url.startswith("mysql://"):
+    db_url = db_url.replace("mysql://", "mysql+mysqlconnector://", 1)
+app.config["SQLALCHEMY_DATABASE_URI"] = db_url
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 # Configuracion de Flasgger
