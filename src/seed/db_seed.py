@@ -6,22 +6,22 @@ import bcrypt
 
 load_dotenv() 
 
-print(f"MYSQL_PORT: {os.getenv('MYSQL_PORT', '3306')}")
-print(f"MYSQL_DATABASE: {os.getenv('MYSQL_DATABASE', "huellasdb")}")
+print(f"MYSQL_PORT: {os.getenv('MYSQL_PORT')}")
+print(f"MYSQL_DATABASE: {os.getenv('MYSQL_DATABASE')}")
 print(f"Host: localhost")
 
 try:
     conn = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password=os.getenv("MYSQL_ROOT_PASSWORD"),
-        port=3306  
+        host=os.getenv("MYSQL_HOST", "localhost"),
+        user=os.getenv("MYSQL_USER", "root"),
+        password=os.getenv("MYSQL_PASSWORD") or os.getenv("MYSQL_ROOT_PASSWORD"),
+        port=int(os.getenv("MYSQL_PORT", 3306))
     )
     print("Conexión exitosa a MySQL")
     
     cursor = conn.cursor()
     
-    database_name = os.getenv("MYSQL_DATABASE", "huellasdb")
+    database_name = os.getenv("MYSQL_DATABASE")
     cursor.execute(f"CREATE DATABASE IF NOT EXISTS {database_name}")
     print(f"Base de datos '{database_name}' creada/verificada")
     

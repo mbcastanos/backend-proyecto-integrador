@@ -17,17 +17,15 @@ import os
 app = Flask(__name__)
 
 CORS(app, origins=[
+    "https://huellasfrontend.vercel.app",
+    "https://huellasfrontend-nr4olfgfj-gonzav104s-proyectos.vercel.app",
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "http://localhost:5173",
     "http://127.0.0.1:5173"
 ], supports_credentials=True)
 
-app.config["SQLALCHEMY_DATABASE_URI"] = (
-
-    "mysql+mysqlconnector://root:@localhost:3306/huellasdb"
-
-)
+app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 # Configuracion de Flasgger

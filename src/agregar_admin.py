@@ -2,11 +2,12 @@ import MySQLdb
 import bcrypt
 
 def get_connection():
-    return MySQLdb.connect( #cambienle estos datos por los de su bd
-        host="localhost",
-        user="root",
-        password="",
-        database="huellasdb",
+    import os
+    return MySQLdb.connect(
+        host=os.getenv("MYSQL_HOST", "localhost"),
+        user=os.getenv("MYSQL_USER", "root"),
+        password=os.getenv("MYSQL_PASSWORD", ""),
+        database=os.getenv("MYSQL_DATABASE", "huellasdb"),
     )
 
 def crear_admin():

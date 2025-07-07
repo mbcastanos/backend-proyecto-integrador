@@ -8,10 +8,10 @@ print(f"Conectando a MySQL en puerto {os.getenv('MYSQL_PORT', '3306')}...")
 
 try:
     conn = mysql.connector.connect(
-       
-        user="root",
-        password=os.getenv("MYSQL_ROOT_PASSWORD"),
-        port=3306
+        host=os.getenv("MYSQL_HOST", "localhost"),
+        user=os.getenv("MYSQL_USER", "root"),
+        password=os.getenv("MYSQL_PASSWORD") or os.getenv("MYSQL_ROOT_PASSWORD"),
+        port=int(os.getenv("MYSQL_PORT", 3306))
     )
     print("Conexión exitosa a MySQL")
     
