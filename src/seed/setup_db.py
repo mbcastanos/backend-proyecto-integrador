@@ -2,6 +2,8 @@ import os
 import mysql.connector
 from dotenv import load_dotenv
 
+load_dotenv()
+
 print(f"Conectando a MySQL en puerto {os.getenv('MYSQL_PORT', '3306')}...")
 
 try:
