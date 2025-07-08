@@ -7,24 +7,21 @@ from src.models import db, Usuario
 from src.controllers.auth import token_required
 from dotenv import load_dotenv
 import os
-from pathlib import Path # Importa Path para manejo de rutas de archivos.
+from flask import make_response
 
 # Para los que hagan pull: definan esta variable de entorno en un archivo .env
 # Esto es temporal hasta que se suba el codigo a un servidor
 secret_key = os.getenv("SECRET_KEY")
 
 
-login_bp = Blueprint('login_bp', __name__, url_prefix='')
+login_bp = Blueprint('login_bp', __name__)
 # Usar variable de entorno para orígenes de CORS
 import os
 
 @login_bp.route("/auth/login", methods=["POST", "OPTIONS"])
 def login():
     if request.method == "OPTIONS":
-        response = jsonify({})
-        response.status_code = 200
-        return response
-
+        response = jsonify({}), 200
     try:
         data = request.get_json()
         username = data.get("username")
