@@ -16,14 +16,22 @@ import os
 
 app = Flask(__name__)
 
-CORS(app, origins=[
-    "https://huellasfrontend.vercel.app",
-    "https://huellasfrontend-nr4olfgfj-gonzav104s-proyectos.vercel.app",
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "http://localhost:5173",
-    "http://127.0.0.1:5173"
-], supports_credentials=True)
+# --- Configuración de CORS dinámica ---
+cors_origins_env = os.getenv("CORS_ORIGINS")
+allowed_origins = []
+if cors_origins_env:
+    # Dividir la cadena por comas y limpiar espacios en blanco
+    allowed_origins = [origin.strip() for origin in cors_origins_env.split(',') if origin.strip()]
+else:
+    # Si CORS_ORIGINS no está definida o está vacía, se puede decidir un comportamiento.
+    # Para desarrollo local, podrías querer permitir localhost explícitamente si no está en la variable.
+    # Para producción, esta variable DEBE estar definida.
+    print("ADVERTENCIA: La variable de entorno 'CORS_ORIGINS' no está definida. La configuración de CORS podría ser restrictiva.")
+    # Si quieres un fallback para desarrollo, puedes añadirlo aquí, por ejemplo:
+    # allowed_origins = ["http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:5173", "http://127.0.0.1:5173"]
+    # Si la dejas vacía, Flask-CORS será muy estricto y podría bloquear todas las peticiones si no hay @cross_origin en las rutas.
+
+CORS(app, origins=allowed_origins, supports_credentials=True)
 
 db_url = os.getenv("DATABASE_URL")
 if db_url and db_url.startswith("mysql://"):

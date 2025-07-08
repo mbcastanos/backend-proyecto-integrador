@@ -5,9 +5,7 @@ from flask import Blueprint, Response, g, json, jsonify, request
 from flask_cors import CORS
 from src.models import db, Usuario
 from src.controllers.auth import token_required
-from dotenv import load_dotenv
 import os
-from pathlib import Path # Importa Path para manejo de rutas de archivos.
 
 # Para los que hagan pull: definan esta variable de entorno en un archivo .env
 # Esto es temporal hasta que se suba el codigo a un servidor
@@ -15,25 +13,12 @@ secret_key = os.getenv("SECRET_KEY")
 
 
 login_bp = Blueprint('login_bp', __name__, url_prefix='')
-# Usar variable de entorno para orígenes de CORS
-import os
-cors_origins = os.getenv("CORS_ORIGINS", "").split(",")
-cors_origins = [o.strip() for o in cors_origins if o.strip()]
-if not cors_origins:
-    cors_origins = [
-        "https://huellasfrontend.vercel.app",
-        "https://huellasfrontend-nr4olfgfj-gonzav104s-proyectos.vercel.app"
-    ]
-CORS(login_bp, origins=cors_origins, supports_credentials=True)
+
+
 
 
 @login_bp.route("/auth/login", methods=["POST", "OPTIONS"])
 def login():
-    if request.method == "OPTIONS":
-        response = jsonify({})
-        response.status_code = 200
-        return response
-
     try:
         data = request.get_json()
         username = data.get("username")

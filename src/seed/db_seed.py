@@ -1,10 +1,6 @@
 import os
 import mysql.connector
-from dotenv import load_dotenv
 import bcrypt
-
-
-load_dotenv() 
 
 print(f"MYSQL_PORT: {os.getenv('MYSQL_PORT')}")
 print(f"MYSQL_DATABASE: {os.getenv('MYSQL_DATABASE')}")

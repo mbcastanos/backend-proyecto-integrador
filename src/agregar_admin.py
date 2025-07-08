@@ -1,9 +1,9 @@
-import MySQLdb
+import mysql.connector
 import bcrypt
 
 def get_connection():
     import os
-    return MySQLdb.connect(
+    return mysql.connector.connect(
         host=os.getenv("MYSQL_HOST", "localhost"),
         user=os.getenv("MYSQL_USER", "root"),
         password=os.getenv("MYSQL_PASSWORD", ""),
