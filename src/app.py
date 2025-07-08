@@ -19,14 +19,6 @@ app = Flask(__name__)
 # Permitir todos los orígenes (temporal para debugging)
 CORS(app, supports_credentials=True)
 
-# Middleware para agregar headers CORS a todas las respuestas
-@app.after_request
-def after_request(response):
-    response.headers.add("Access-Control-Allow-Origin", "*")  # Permitir todos los orígenes (temporal para debugging)
-    response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
-    response.headers.add("Access-Control-Allow-Methods", "GET,POST,OPTIONS,PATCH,DELETE")
-    return response
-
 CORS(app, origins=[
     "https://huellasfrontend.vercel.app",
     "https://huellasfrontend-nr4olfgfj-gonzav104s-proyectos.vercel.app",

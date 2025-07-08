@@ -3,8 +3,6 @@ from flask import g, request, jsonify
 import jwt
 from dotenv import load_dotenv
 import os
-
-load_dotenv()
 secret_key = os.getenv("SECRET_KEY")
 
 def token_required(f):

@@ -18,7 +18,7 @@ login_bp = Blueprint('login_bp', __name__)
 # Usar variable de entorno para orígenes de CORS
 import os
 
-@login_bp.route("/auth/login", methods=["POST", "OPTIONS"])
+@login_bp.route("/auth/login", methods=["POST", "GET", "OPTIONS"])
 def login():
     if request.method == "OPTIONS":
         response = jsonify({}), 200
