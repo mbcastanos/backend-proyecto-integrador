@@ -104,7 +104,7 @@ try:
             id_suela INT AUTO_INCREMENT PRIMARY KEY,
             id_calzado INT,
             descripcion_general TEXT,
-            FOREIGN KEY (id_calzado) REFERENCES Calzado(id_calzado)
+            FOREIGN KEY (id_calzado) REFERENCES calzado(id_calzado)
         )
         """),
         ("detallesuela", """
