@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, Blueprint
 from flask_cors import CORS
 from flasgger import Swagger
-from swagger_spec import SWAGGER_SPEC
+from src.swagger_spec import SWAGGER_SPEC
 from models import db, Calzado, Suela, DetalleSuela
 from controllers.calzado_controller import calzado_bp
 from controllers.suela_controller import suela_bp
@@ -35,7 +35,7 @@ CORS(app, origins=[
 ], supports_credentials=True)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = (
-    f"mysql+mysqlconnector://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}:{MYSQL_PORT}/{MYSQL_NAME}"
+    f"mysql+mysqlconnector://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}:{MYSQL_PORT}/{MYSQL_DATABASE}"
 )
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
