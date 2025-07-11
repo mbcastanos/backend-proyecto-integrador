@@ -201,8 +201,12 @@ def delete_user_by_id(id):
     return jsonify({"message": "Usuario eliminado exitosamente"}), 200
 
 
-@login_bp.route("/usuarios", methods=["GET"])
+@login_bp.route("/usuarios", methods=["GET", "OPTIONS"])
+@token_required
 def get_all_users():
+    if request.method == "OPTIONS":
+        # Flask-CORS debería manejar esto, pero si llega aquí, simplemente devuelve 200 OK
+        return jsonify({}), 200
     try:
         usuarios = Usuario.query.all()
 
