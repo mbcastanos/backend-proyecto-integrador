@@ -1,7 +1,7 @@
 from . import db
 
 class FormaGeometrica(db.Model):
-    __tablename__ = 'FormaGeometrica'
+    __tablename__ = 'formageometrica'
 
     id_forma = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(50), nullable=False)

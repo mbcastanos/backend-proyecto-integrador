@@ -1,7 +1,7 @@
 from . import db
 
 class Cuadrante(db.Model):
-    __tablename__ = 'Cuadrante'
+    __tablename__ = 'cuadrante'
 
     id_cuadrante = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(50), nullable=False)

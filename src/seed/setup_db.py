@@ -31,52 +31,52 @@ try:
     print(f"Usando base de datos '{database_name}'")
 
     tables = [
-        ("Marca", """
-        CREATE TABLE IF NOT EXISTS Marca (
+        ("marca", """
+        CREATE TABLE IF NOT EXISTS marca (
             id_marca INT AUTO_INCREMENT PRIMARY KEY,
             nombre VARCHAR(50) UNIQUE
         )
         """),
-        ("Modelo", """
-        CREATE TABLE IF NOT EXISTS Modelo (
+        ("modelo", """
+        CREATE TABLE IF NOT EXISTS modelo (
             id_modelo INT AUTO_INCREMENT PRIMARY KEY,
             nombre VARCHAR(100) UNIQUE
         )
         """),
-        ("Categoria", """
-        CREATE TABLE IF NOT EXISTS Categoria (
+        ("categoria", """
+        CREATE TABLE IF NOT EXISTS categoria (
             id_categoria INT AUTO_INCREMENT PRIMARY KEY,
             nombre VARCHAR(50) UNIQUE
         )
         """),
-        ("Colores", """
-        CREATE TABLE IF NOT EXISTS Colores (
+        ("colores", """
+        CREATE TABLE IF NOT EXISTS colores (
             id_color INT AUTO_INCREMENT PRIMARY KEY,
             nombre VARCHAR(50) UNIQUE
         )
         """),
-        ("Cuadrante", """
-        CREATE TABLE IF NOT EXISTS Cuadrante (
+        ("cuadrante", """
+        CREATE TABLE IF NOT EXISTS cuadrante (
             id_cuadrante INT AUTO_INCREMENT PRIMARY KEY,
             nombre VARCHAR(50)
         )
         """),
-        ("FormaGeometrica", """
-        CREATE TABLE IF NOT EXISTS FormaGeometrica (
+        ("formageometrica", """
+        CREATE TABLE IF NOT EXISTS formageometrica (
             id_forma INT AUTO_INCREMENT PRIMARY KEY,
             nombre VARCHAR(50)
         )
         """),
-        ("Usuarios", """
-        CREATE TABLE IF NOT EXISTS Usuarios (
+        ("usuarios", """
+        CREATE TABLE IF NOT EXISTS usuarios (
             id INT AUTO_INCREMENT PRIMARY KEY,
             username VARCHAR(50) NOT NULL UNIQUE,
             password_hash VARCHAR(128) NOT NULL,
             role VARCHAR(20) NOT NULL
         )
         """),
-        ("Calzado", """
-        CREATE TABLE IF NOT EXISTS Calzado (
+        ("calzado", """
+        CREATE TABLE IF NOT EXISTS calzado (
             id_calzado INT AUTO_INCREMENT PRIMARY KEY,
             talle VARCHAR(10),
             ancho DECIMAL(5,2),
@@ -85,9 +85,9 @@ try:
             id_marca INT,
             id_modelo INT,
             id_categoria INT,
-            FOREIGN KEY (id_marca) REFERENCES Marca(id_marca),
-            FOREIGN KEY (id_modelo) REFERENCES Modelo(id_modelo),
-            FOREIGN KEY (id_categoria) REFERENCES Categoria(id_categoria)
+            FOREIGN KEY (id_marca) REFERENCES marca(id_marca),
+            FOREIGN KEY (id_modelo) REFERENCES modelo(id_modelo),
+            FOREIGN KEY (id_categoria) REFERENCES categoria(id_categoria)
         )
         """),
         ("calzado_color", """
@@ -95,32 +95,32 @@ try:
             id_calzado INT,
             id_color INT,
             PRIMARY KEY (id_calzado, id_color),
-            FOREIGN KEY (id_calzado) REFERENCES Calzado(id_calzado) ON DELETE CASCADE,
-            FOREIGN KEY (id_color) REFERENCES Colores(id_color) ON DELETE CASCADE
+            FOREIGN KEY (id_calzado) REFERENCES calzado(id_calzado) ON DELETE CASCADE,
+            FOREIGN KEY (id_color) REFERENCES colores(id_color) ON DELETE CASCADE
         )
         """),
-        ("Suela", """
-        CREATE TABLE IF NOT EXISTS Suela (
+        ("suela", """
+        CREATE TABLE IF NOT EXISTS suela (
             id_suela INT AUTO_INCREMENT PRIMARY KEY,
             id_calzado INT,
             descripcion_general TEXT,
             FOREIGN KEY (id_calzado) REFERENCES Calzado(id_calzado)
         )
         """),
-        ("DetalleSuela", """
-        CREATE TABLE IF NOT EXISTS DetalleSuela (
+        ("detallesuela", """
+        CREATE TABLE IF NOT EXISTS detallesuela (
             id_detalle INT AUTO_INCREMENT PRIMARY KEY,
             id_suela INT,
             id_cuadrante INT,
             id_forma INT,
             detalle_adicional TEXT,
-            FOREIGN KEY (id_suela) REFERENCES Suela(id_suela),
-            FOREIGN KEY (id_cuadrante) REFERENCES Cuadrante(id_cuadrante),
-            FOREIGN KEY (id_forma) REFERENCES FormaGeometrica(id_forma)
+            FOREIGN KEY (id_suela) REFERENCES suela(id_suela),
+            FOREIGN KEY (id_cuadrante) REFERENCES cuadrante(id_cuadrante),
+            FOREIGN KEY (id_forma) REFERENCES formageometrica(id_forma)
         )
         """),
-          ("Imputados", """
-        CREATE TABLE IF NOT EXISTS Imputado (
+          ("imputados", """
+        CREATE TABLE IF NOT EXISTS imputado (
             id INT AUTO_INCREMENT PRIMARY KEY,
             nombre VARCHAR(50) NOT NULL,
             dni INT NOT NULL,

@@ -17,7 +17,7 @@ secret_key = os.getenv("SECRET_KEY")
 
 
 login_bp = Blueprint('login_bp', __name__)
-CORS(login_bp, origins=["http://localhost:3000", "http://127.0.0.1:3000"], supports_credentials=True)
+CORS(login_bp, origins=["http://localhost:3000", "http://127.0.0.1:3000", "https://huellasfrontend.vercel.app/"], supports_credentials=True)
 
 
 @login_bp.route("/auth/login", methods=["POST", "OPTIONS"])

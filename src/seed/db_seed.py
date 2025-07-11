@@ -63,7 +63,7 @@ for username, password, role in usuarios:
     if cursor.fetchone()[0] == 0:
         hashed = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode("utf-8")
         cursor.execute("""
-            INSERT INTO Usuarios (username, password_hash, role)
+            INSERT INTO usuarios (username, password_hash, role)
             VALUES (%s, %s, %s)
         """, (username, hashed, role))
 
@@ -77,13 +77,13 @@ for username, password, role in usuarios:
     ]
 
     for nombre in cuadrantes:
-        cursor.execute("INSERT INTO Cuadrante (nombre) VALUES (%s)", (nombre,))
+        cursor.execute("INSERT INTO cuadrante (nombre) VALUES (%s)", (nombre,))
 
     # Insertar formas geométricas
     formas = ["Círculo", "Rombo", "Pirámide", "Texto", "Logo", "Triángulo", "Rectángulo"]
 
     for forma in formas:
-        cursor.execute("INSERT INTO FormaGeometrica (nombre) VALUES (%s)", (forma,))
+        cursor.execute("INSERT INTO formageometrica (nombre) VALUES (%s)", (forma,))
 
     # Insertar todos los modelos
     modelos = [
@@ -96,7 +96,7 @@ for username, password, role in usuarios:
 
     for modelo_nombre in modelos:
         cursor.execute("""
-            INSERT IGNORE INTO Modelo (nombre)
+            INSERT IGNORE INTO modelo (nombre)
             VALUES (%s)
         """, (modelo_nombre,))
 
@@ -122,7 +122,7 @@ for username, password, role in usuarios:
 
     for color_nombre in colores:
         cursor.execute("""
-            INSERT IGNORE INTO Colores (nombre)
+            INSERT IGNORE INTO colores (nombre)
             VALUES (%s)
         """, (color_nombre,))
 
@@ -137,7 +137,7 @@ for username, password, role in usuarios:
 
     for categoria_nombre in categorias:
         cursor.execute("""
-            INSERT IGNORE INTO Categoria (nombre)
+            INSERT IGNORE INTO categoria (nombre)
             VALUES (%s)
         """, (categoria_nombre,))
 
@@ -166,21 +166,21 @@ for username, password, role in usuarios:
 
     for marca_nombre in marcas:
         cursor.execute("""
-            INSERT IGNORE INTO Marca (nombre)
+            INSERT IGNORE INTO marca (nombre)
             VALUES (%s)
         """, (marca_nombre,))
 
     # Obtener IDs de las tablas independientes
-    cursor.execute("SELECT id_marca FROM Marca")
+    cursor.execute("SELECT id_marca FROM marca")
     marca_ids = [row[0] for row in cursor.fetchall()]
     
-    cursor.execute("SELECT id_modelo FROM Modelo")
+    cursor.execute("SELECT id_modelo FROM modelo")
     modelo_ids = [row[0] for row in cursor.fetchall()]
     
-    cursor.execute("SELECT id_categoria FROM Categoria")
+    cursor.execute("SELECT id_categoria FROM categoria")
     categoria_ids = [row[0] for row in cursor.fetchall()]
     
-    cursor.execute("SELECT id_color FROM Colores")
+    cursor.execute("SELECT id_color FROM colores")
     color_ids = [row[0] for row in cursor.fetchall()]
 
     # Insertar calzados con referencias a las tablas independientes
@@ -194,13 +194,13 @@ for username, password, role in usuarios:
 
     for c in calzados:
         cursor.execute("""
-            INSERT INTO Calzado (talle, ancho, alto, tipo_registro, id_marca, id_modelo, id_categoria)
+            INSERT INTO calzado (talle, ancho, alto, tipo_registro, id_marca, id_modelo, id_categoria)
             VALUES (%s, %s, %s, %s, %s, %s, %s)
         """, c)
 
     conn.commit()
 
-    cursor.execute("SELECT id_calzado FROM Calzado")
+    cursor.execute("SELECT id_calzado FROM calzado")
     calzado_ids = [row[0] for row in cursor.fetchall()]
 
     # Tabla intermedia
@@ -216,27 +216,27 @@ for username, password, role in usuarios:
     # Insertar suelas para cada calzado
     for id_calzado in calzado_ids:
         cursor.execute("""
-            INSERT INTO Suela (id_calzado, descripcion_general)
+            INSERT INTO suela (id_calzado, descripcion_general)
             VALUES (%s, %s)
         """, (id_calzado, "Suela con dibujo estándar para pruebas"))
 
     conn.commit()
 
     # Obtener IDs para las relaciones
-    cursor.execute("SELECT id_cuadrante FROM Cuadrante")
+    cursor.execute("SELECT id_cuadrante FROM cuadrante")
     cuadrante_ids = [row[0] for row in cursor.fetchall()]
 
-    cursor.execute("SELECT id_forma FROM FormaGeometrica")
+    cursor.execute("SELECT id_forma FROM formageometrica")
     forma_ids = [row[0] for row in cursor.fetchall()]
 
-    cursor.execute("SELECT id_suela FROM Suela")
+    cursor.execute("SELECT id_suela FROM suela")
     suela_ids = [row[0] for row in cursor.fetchall()]
 
     # Insertar detalles de suela
     for suela_id in suela_ids:
         for i in range(3): 
             cursor.execute("""
-                INSERT INTO DetalleSuela (id_suela, id_cuadrante, id_forma, detalle_adicional)
+                INSERT INTO detallesuela (id_suela, id_cuadrante, id_forma, detalle_adicional)
                 VALUES (%s, %s, %s, %s)
             """, (
                 suela_id,

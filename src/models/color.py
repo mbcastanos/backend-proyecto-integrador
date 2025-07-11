@@ -1,7 +1,7 @@
 from . import db
 
 class Color(db.Model):
-    __tablename__ = 'Colores'
+    __tablename__ = 'colores'
 
     id_color = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(50), nullable=False, unique=True)

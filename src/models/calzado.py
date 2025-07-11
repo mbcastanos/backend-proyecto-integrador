@@ -3,12 +3,12 @@ from . import db
 
 # Tabla intermedia para la relación muchos a muchos entre Calzado y Color
 calzado_color = db.Table('calzado_color',
-    db.Column('id_calzado', db.Integer, db.ForeignKey('Calzado.id_calzado'), primary_key=True),
-    db.Column('id_color', db.Integer, db.ForeignKey('Colores.id_color'), primary_key=True)
+    db.Column('id_calzado', db.Integer, db.ForeignKey('calzado.id_calzado'), primary_key=True),
+    db.Column('id_color', db.Integer, db.ForeignKey('colores.id_color'), primary_key=True)
 )
 
 class Calzado(db.Model):
-    __tablename__ = 'Calzado'
+    __tablename__ = 'calzado'
 
     id_calzado = db.Column(db.Integer, primary_key=True)
     talle = db.Column(db.String(10), nullable=True)
@@ -18,9 +18,9 @@ class Calzado(db.Model):
         db.Enum('indubitada_proveedor', 'indubitada_comisaria', 'dubitada'),
         nullable=True
     )
-    id_marca = db.Column(db.Integer, db.ForeignKey('Marca.id_marca'), nullable=True)
-    id_modelo = db.Column(db.Integer, db.ForeignKey('Modelo.id_modelo'), nullable=True)
-    id_categoria = db.Column(db.Integer, db.ForeignKey('Categoria.id_categoria'), nullable=True)
+    id_marca = db.Column(db.Integer, db.ForeignKey('marca.id_marca'), nullable=True)
+    id_modelo = db.Column(db.Integer, db.ForeignKey('modelo.id_modelo'), nullable=True)
+    id_categoria = db.Column(db.Integer, db.ForeignKey('categoria.id_categoria'), nullable=True)
 
     suelas = db.relationship('Suela', backref='calzado', cascade="all, delete-orphan")
     marca = db.relationship('Marca', backref='calzados')

@@ -1,7 +1,7 @@
 from . import db
 
 class Imputado(db.Model):
-    __tablename__ = 'Imputado'
+    __tablename__ = 'imputado'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
