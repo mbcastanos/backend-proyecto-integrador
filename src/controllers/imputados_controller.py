@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from models import db, Imputado
+from src.models import db, Imputado
 
 imputados_bp = Blueprint('imputados_bp', __name__, url_prefix='/imputados')
 

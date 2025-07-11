@@ -2,16 +2,16 @@ from flask import Flask, jsonify, Blueprint
 from flask_cors import CORS
 from flasgger import Swagger
 from src.swagger_spec import SWAGGER_SPEC
-from models import db, Calzado, Suela, DetalleSuela
-from controllers.calzado_controller import calzado_bp
-from controllers.suela_controller import suela_bp
-from controllers.forma_geometrica_controller import forma_bp
-from controllers.login_controller import login_bp
-from controllers.marca_controller import marca_bp
-from controllers.modelo_controller import modelo_bp
-from controllers.categoria_controller import categoria_bp
-from controllers.color_controller import color_bp
-from controllers.imputados_controller import imputados_bp
+from src.models import db, Calzado, Suela, DetalleSuela
+from src.controllers.calzado_controller import calzado_bp
+from src.controllers.suela_controller import suela_bp
+from src.controllers.forma_geometrica_controller import forma_bp
+from src.controllers.login_controller import login_bp
+from src.controllers.marca_controller import marca_bp
+from src.controllers.modelo_controller import modelo_bp
+from src.controllers.categoria_controller import categoria_bp
+from src.controllers.color_controller import color_bp
+from src.controllers.imputados_controller import imputados_bp
 import os
 from dotenv import load_dotenv
 

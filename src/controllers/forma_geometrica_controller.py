@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from models import db, FormaGeometrica, DetalleSuela
+from src.models import db, FormaGeometrica, DetalleSuela
 
 forma_bp = Blueprint("forma_bp", __name__, url_prefix="/formas")
 
