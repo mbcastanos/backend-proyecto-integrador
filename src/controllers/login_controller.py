@@ -201,7 +201,7 @@ def delete_user_by_id(id):
     return jsonify({"message": "Usuario eliminado exitosamente"}), 200
 
 
-@login_bp.route("/usuarios", methods=["GET", "OPTIONS"])
+@login_bp.route("/usuarios", methods=["GET", "OPTIONS"], strict_slashes=False)
 @token_required
 def get_all_users():
     if request.method == "OPTIONS":
