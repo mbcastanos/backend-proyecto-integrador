@@ -4,7 +4,7 @@ class FormaGeometrica(db.Model):
     __tablename__ = 'formageometrica'
 
     id_forma = db.Column(db.Integer, primary_key=True)
-    nombre = db.Column(db.String(50), nullable=False)
+    nombre = db.Column(db.String(50), nullable=False, unique=True)
 
     detalles = db.relationship('DetalleSuela', backref='forma')
 

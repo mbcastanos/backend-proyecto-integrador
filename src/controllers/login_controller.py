@@ -17,7 +17,7 @@ if not secret_key:
 
 login_bp = Blueprint('login_bp', __name__)
 
-@login_bp.route("/auth/login", methods=["POST", "OPTIONS"])
+@login_bp.route("/auth/login", methods=["POST", "OPTIONS"], strict_slashes=False)
 def login():
     if request.method == "OPTIONS":
         response = jsonify({})
@@ -63,8 +63,13 @@ def login():
         return jsonify({"error": "Error interno del servidor"}), 500
 
     
-@login_bp.route("/usuarios", methods = ["POST"])
+@login_bp.route("/usuarios", methods = ["POST", "OPTIONS"], strict_slashes=False)
 def create_user():
+    if request.method == "OPTIONS": # Manejar solicitudes preflight de CORS
+        response = jsonify({})
+        response.status_code = 200
+        return response
+    
     try:
         data = request.get_json()
         username = data.get("username")
