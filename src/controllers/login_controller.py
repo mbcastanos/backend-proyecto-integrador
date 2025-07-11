@@ -2,12 +2,9 @@ import datetime
 import jwt
 import bcrypt
 from flask import Blueprint, Response, g, json, jsonify, request
-from flask_cors import CORS
 from src.models import db, Usuario
 from src.controllers.auth import token_required
-from dotenv import load_dotenv
 import os
-from pathlib import Path # Importa Path para manejo de rutas de archivos.
 
 load_dotenv(dotenv_path=Path(__file__).resolve().parent / ".env") # Carga variables de entorno desde el archivo .env ubicado en el directorio raíz del script.
 
@@ -15,10 +12,14 @@ load_dotenv(dotenv_path=Path(__file__).resolve().parent / ".env") # Carga variab
 # Esto es temporal hasta que se suba el codigo a un servidor
 secret_key = os.getenv("SECRET_KEY")
 
+if not secret_key:
+    
+    print("ADVERTENCIA: SECRET_KEY no está configurada. Los tokens JWT no funcionarán correctamente.")
+    
+
+
 
 login_bp = Blueprint('login_bp', __name__)
-CORS(login_bp, origins=["http://localhost:3000", "http://127.0.0.1:3000", "https://huellasfrontend.vercel.app/"], supports_credentials=True)
-
 
 @login_bp.route("/auth/login", methods=["POST", "OPTIONS"])
 def login():
@@ -45,6 +46,9 @@ def login():
             "username": usuario.username,
             "exp": datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=1)
         }
+        
+        if not secret_key:
+            raise ValueError("SECRET_KEY no está configurada, no se puede generar el token JWT.")
 
         token = jwt.encode(payload, secret_key, algorithm="HS256")
         # Si el token es bytes, lo decodifica a una cadena UTF-8.

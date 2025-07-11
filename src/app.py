@@ -27,13 +27,9 @@ MYSQL_PORT = os.getenv('MYSQL_PORT', '35908')
 
 app = Flask(__name__)
 
-CORS(app, origins=[
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "https://huellasfrontend.vercel.app/"
-], supports_credentials=True)
+frontend_origins_str = os.getenv("FRONTEND_URL", "http://localhost:3000,http://127.0.0.1:3000,http://localhost:5173,http://127.0.0.1:5173,https://huellasfrontend.vercel.app")
+allowed_origins = [origin.strip() for origin in frontend_origins_str.split(',')]
+CORS(app, origins=allowed_origins, supports_credentials=True)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = (
     f"mysql+mysqlconnector://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}:{MYSQL_PORT}/{MYSQL_DATABASE}"
@@ -75,4 +71,5 @@ app.register_blueprint(imputados_bp)
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
-    app.run(host="0.0.0.0", debug=True)
+    debug_mode = os.getenv("FLASK_DEBUG", "True").lower() == "true"
+    app.run(host="0.0.0.0", debug=debug_mode)
