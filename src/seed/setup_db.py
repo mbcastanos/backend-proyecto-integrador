@@ -4,19 +4,26 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-print(f"Conectando a MySQL en puerto {os.getenv('MYSQL_PORT', '3306')}...")
+# Obtener las variables de entorno para la conexión a la base de datos
+MYSQL_HOST = os.getenv('MYSQL_HOST', 'localhost')
+MYSQL_USER = os.getenv('MYSQL_USER', 'root')
+MYSQL_PASSWORD = os.getenv('MYSQL_PASSWORD')
+MYSQL_DATABASE = os.getenv('MYSQL_DATABASE', 'huellasdb')
+MYSQL_PORT = int(os.getenv('MYSQL_PORT', '3306'))
+
+print(f"Conectando a MySQL en puerto {MYSQL_PORT}...")
 
 try:
     conn = mysql.connector.connect(
-       
-        user="root",
-        password=os.getenv("MYSQL_ROOT_PASSWORD"),
-        port=3306
+        host = MYSQL_HOST,
+        user=MYSQL_USER,
+        password=MYSQL_PASSWORD,
+        port=MYSQL_PORT
     )
     print("Conexión exitosa a MySQL")
     
     cursor = conn.cursor()
-    database_name = os.getenv("MYSQL_DATABASE", "huellasdb")
+    database_name = MYSQL_DATABASE
     cursor.execute(f"CREATE DATABASE IF NOT EXISTS {database_name}")
     print(f"Base de datos '{database_name}' creada/verificada")
 

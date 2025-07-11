@@ -12,6 +12,18 @@ from controllers.modelo_controller import modelo_bp
 from controllers.categoria_controller import categoria_bp
 from controllers.color_controller import color_bp
 from controllers.imputados_controller import imputados_bp
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+# Obtener las variables de entorno para la conexión a la base de datos
+MYSQL_HOST = os.getenv('MYSQL_HOST', 'gondola.proxy.rlwy.net')
+MYSQL_USER = os.getenv('MYSQL_USER', 'root')
+MYSQL_PASSWORD = os.getenv('MYSQL_PASSWORD', 'LPibeCJDBWxROkNbNaAtDYrvfyXBKIyz')
+MYSQL_DATABASE = os.getenv('MYSQL_DATABASE', 'railway')
+MYSQL_PORT = os.getenv('MYSQL_PORT', '35908')
+
 
 app = Flask(__name__)
 
@@ -23,7 +35,7 @@ CORS(app, origins=[
 ], supports_credentials=True)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = (
-    "mysql+mysqlconnector://root:@localhost:3306/huellasdb"
+    f"mysql+mysqlconnector://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}:{MYSQL_PORT}/{MYSQL_NAME}"
 )
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
