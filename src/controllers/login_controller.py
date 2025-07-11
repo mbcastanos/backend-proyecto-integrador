@@ -6,10 +6,6 @@ from src.models import db, Usuario
 from src.controllers.auth import token_required
 import os
 
-load_dotenv(dotenv_path=Path(__file__).resolve().parent / ".env") # Carga variables de entorno desde el archivo .env ubicado en el directorio raíz del script.
-
-# Para los que hagan pull: definan esta variable de entorno en un archivo .env
-# Esto es temporal hasta que se suba el codigo a un servidor
 secret_key = os.getenv("SECRET_KEY")
 
 if not secret_key:
