@@ -27,7 +27,7 @@ MYSQL_PORT = os.getenv('MYSQL_PORT', '11692')
 
 app = Flask(__name__)
 
-frontend_origins_str = os.getenv("*", "FRONTEND_URL", "http://localhost:3000,http://127.0.0.1:3000,http://localhost:5173,http://127.0.0.1:5173,https://huellasfrontend.vercel.app")
+frontend_origins_str = os.getenv("FRONTEND_URL", "*,http://localhost:3000,http://127.0.0.1:3000,http://localhost:5173,http://127.0.0.1:5173,https://huellasfrontend.vercel.app")
 allowed_origins = [origin.strip() for origin in frontend_origins_str.split(',')]
 CORS(app, origins=allowed_origins, supports_credentials=True)
 
