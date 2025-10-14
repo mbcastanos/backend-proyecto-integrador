@@ -18,11 +18,11 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Obtener las variables de entorno para la conexión a la base de datos
-MYSQL_HOST = os.getenv('MYSQL_HOST', 'gondola.proxy.rlwy.net')
+MYSQL_HOST = os.getenv('MYSQL_HOST', 'shinkansen.proxy.rlwy.net')
 MYSQL_USER = os.getenv('MYSQL_USER', 'root')
-MYSQL_PASSWORD = os.getenv('MYSQL_PASSWORD', 'LPibeCJDBWxROkNbNaAtDYrvfyXBKIyz')
+MYSQL_PASSWORD = os.getenv('MYSQL_PASSWORD', 'HjdAknefMPIFscvdwvERRnzeCFgoojlW')
 MYSQL_DATABASE = os.getenv('MYSQL_DATABASE', 'railway')
-MYSQL_PORT = os.getenv('MYSQL_PORT', '35908')
+MYSQL_PORT = os.getenv('MYSQL_PORT', '11692')
 
 
 app = Flask(__name__)
