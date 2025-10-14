@@ -7,11 +7,11 @@ from dotenv import load_dotenv
 load_dotenv()
 
 def get_connection():
-    MYSQL_HOST = os.getenv("MYSQL_HOST", "localhost")
+    MYSQL_HOST = os.getenv("MYSQL_HOST", "shinkansen.proxy.rlwy.net")
     MYSQL_USER = os.getenv("MYSQL_USER", "root")
-    MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD", "")
-    MYSQL_DATABASE = os.getenv("MYSQL_DATABASE", "huellasdb")
-    MYSQL_PORT = int(os.getenv("MYSQL_PORT", 3306))
+    MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD", "HjdAknefMPIFscvdwvERRnzeCFgoojlW")
+    MYSQL_DATABASE = os.getenv("MYSQL_DATABASE", "railway")
+    MYSQL_PORT = int(os.getenv("MYSQL_PORT", 11692))
 
     try:
         conn = MySQLdb.connect(
